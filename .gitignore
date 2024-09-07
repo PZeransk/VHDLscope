@@ -1,0 +1,16 @@
+VHDLscope/TOP*
+VHDLscope/adc_sim*
+VHDLscope/_ngo
+VHDLscope/_xmsgs
+VHDLscope/iseconfig
+VHDLscope/xlnx_auto_0_xdb
+VHDLscope/xst
+VHDLscope/isim
+*.html
+*.ini 
+*.xml 
+*.log
+*.cmd
+*.xmsgs 
+
+

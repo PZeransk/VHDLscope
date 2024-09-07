@@ -7,6 +7,7 @@ use IEEE.numeric_std.all;
 entity TOP is
 port(
     i_clk   :   in  std_logic;
+    i_cs    :   in  std_logic;
     o_miso0 :   out std_logic
 );
 end TOP;
@@ -20,7 +21,7 @@ begin
 ADC_SIM_TOP: entity work.adc_sim
 port map(
 i_clk   => i_clk,
-i_cs    => cs,
+i_cs    => i_cs,
 o_miso0 => o_miso0
 );
 

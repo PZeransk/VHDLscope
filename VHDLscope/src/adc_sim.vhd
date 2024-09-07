@@ -5,7 +5,7 @@ use IEEE.numeric_std.all;
 
 
 entity adc_sim is
-Generic(C_data_length	:	integer := 10
+Generic(C_data_length	:	integer := 12
 	);
 Port (
 	i_clk 	: in 	std_logic;
@@ -38,12 +38,21 @@ signal r_data_byte 		: std_logic;
 signal r_table_cnt		: integer RANGE 0 TO 127 := 0;
 signal data_byte_cnt	: integer RANGE 0 TO C_data_length := 0; -- 15 bitowy wektor
 signal r_cal_vec        : std_logic_vector(15 downto 0) := (others => '0');
+signal cs_changed       : std_logic := '0';
+signal r_cs_hist        : std_logic_vector(1 downto 0) := (others => '0'); 
 
 begin
 process(i_clk)  
 
 begin
-if(rising_edge(i_cs)) then
+
+
+if rising_edge(i_clk) then
+
+    r_cs_hist <= r_cs_hist(0)&i_cs;
+    
+
+    if r_cs_hist = "10" then
     -- first CS cycle is a calibration cycle it lasts 16 clk cycles SDO is a 0 vector
         if r_cs_cycles = 0 then
         r_cs_cycles <= r_cs_cycles + 1;
@@ -57,23 +66,27 @@ if(rising_edge(i_cs)) then
         end if;
         data_byte_cnt <= 0;
         r_adc_data0 <= "00" & std_logic_vector(to_unsigned(C_sine_LUT(r_table_cnt),10));
-        r_adc_shift(C_data_length -1 downto 0) 	<= std_logic_vector(to_unsigned(C_sine_LUT(r_table_cnt),10));
+        r_adc_shift(C_data_length - 3 downto 0) 	<= std_logic_vector(to_unsigned(C_sine_LUT(r_table_cnt),10));
+    end if;
+
+
+    if  i_cs = '0' then
+
+
+        if(data_byte_cnt = C_data_length) then
+        
+        else
+            o_miso0 <= r_adc_data0(r_adc_data0'high);
+            r_adc_data0 <= r_adc_data0(r_adc_data0'high - 1 downto r_adc_data0'low) & '0';
+            data_byte_cnt <= data_byte_cnt + 1;
+        end if;
+    
+    end if;
+
+
 end if;
 
 
-
-if (i_cs = '0') then
-if (rising_edge(i_clk)) then
-if(data_byte_cnt = C_data_length) then
-
-else
-	o_miso0 <= r_adc_data0(r_adc_data0'high);
-	r_adc_data0 <= r_adc_data0(r_adc_data0'high - 1 downto r_adc_data0'low) & '0';
-	data_byte_cnt <= data_byte_cnt + 1;
-end if;
-
-end if;
-end if;
 
 end process;
 

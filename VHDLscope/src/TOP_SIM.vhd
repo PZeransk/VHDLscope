@@ -42,7 +42,7 @@ architecture Behavioral of TOP_SIM is
     constant cs_l : time := 300 ns;
 
     signal clk  : std_logic := '0';
-    signal miso : std_logic := '0';
+    signal miso_0 : std_logic := '0';
     signal cs   : std_logic := '0';
 
     signal i_clk			:   std_logic := '0';
@@ -69,7 +69,7 @@ begin
     
         i_enable		=>enable,
     
-        i_miso_0		=>miso,
+        i_miso_0		=>miso_0,
         i_miso_1		=>miso_1,
     
         o_cs			=>cs,
@@ -81,11 +81,18 @@ begin
 
 
 
+    ADC_SIM_0: entity work.adc_sim
+    port map(
+        i_clk   => o_spi_clk,
+        i_cs    => cs,
+        o_miso0 => miso_0
+    );
+
     ADC_SIM_1: entity work.adc_sim
     port map(
         i_clk   => o_spi_clk,
         i_cs    => cs,
-        o_miso0 => miso
+        o_miso0 => miso_1
     );
 
     clk_sim: process

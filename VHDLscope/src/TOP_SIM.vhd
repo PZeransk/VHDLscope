@@ -31,7 +31,9 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity TOP_SIM is
-
+    generic (
+        C_data_length : integer := 12
+    );
 end TOP_SIM;
 
 architecture Behavioral of TOP_SIM is
@@ -43,13 +45,45 @@ architecture Behavioral of TOP_SIM is
     signal miso : std_logic := '0';
     signal cs   : std_logic := '0';
 
+    signal i_clk			:   std_logic := '0';
+    signal reset_n		:   std_logic := '1';
+    signal enable		    :   std_logic := '1';
+
+    signal miso_1           :   std_logic := '0';
+    signal o_spi_clk        :   std_logic := '0';
+    signal o_mosi_0         :   std_logic := '0';
+    signal o_rx_data_0      :   std_logic_vector(C_data_length - 1 downto 0):=(others => '0');
+    signal o_rx_data_1      :   std_logic_vector(C_data_length - 1 downto 0):=(others => '0');
 
 begin
 
 
     TOP_ENT: entity work.TOP 
+    GENERIC MAP(
+        C_clk_ratio 	=>  10,
+        C_data_length	=>	C_data_length
+        )
     port map(
-        i_clk => clk,
+        i_clk			=>clk,
+        i_reset_n		=>reset_n,
+    
+        i_enable		=>enable,
+    
+        i_miso_0		=>miso,
+        i_miso_1		=>miso_1,
+    
+        o_cs			=>cs,
+        o_spi_clk		=>o_spi_clk,
+        o_mosi_0		=>o_mosi_0,
+        o_rx_data_0		=>o_rx_data_0,
+        o_rx_data_1		=>o_rx_data_1
+    );
+
+
+
+    ADC_SIM_1: entity work.adc_sim
+    port map(
+        i_clk   => o_spi_clk,
         i_cs    => cs,
         o_miso0 => miso
     );
@@ -62,13 +96,6 @@ begin
         wait for clk_time;
     end process;
 
-    cs_sim: process
-    begin
-        cs <= '0';
-        wait for cs_l;
-        cs <= '1';
-        wait for cs_h;
-    end process;
 
 end Behavioral;
 

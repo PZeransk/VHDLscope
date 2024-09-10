@@ -37,16 +37,17 @@ entity TOP_SIM is
 end TOP_SIM;
 
 architecture Behavioral of TOP_SIM is
-    constant clk_time : time := 10 ns;
-    constant cs_h : time := 30 ns;
-    constant cs_l : time := 300 ns;
-
-    signal clk  : std_logic := '0';
-    signal miso_0 : std_logic := '0';
-    signal cs   : std_logic := '0';
+-- timings constants
+    constant clk_time       : time := 10 ns;
+    constant cs_h           : time := 30 ns;
+    constant cs_l           : time := 300 ns;
+--TOP SIGNALS
+    signal clk              : std_logic := '0';
+    signal miso_0           : std_logic := '0';
+    signal cs               : std_logic := '0';
 
     signal i_clk			:   std_logic := '0';
-    signal reset_n		:   std_logic := '1';
+    signal reset_n		    :   std_logic := '1';
     signal enable		    :   std_logic := '1';
 
     signal miso_1           :   std_logic := '0';
@@ -54,9 +55,30 @@ architecture Behavioral of TOP_SIM is
     signal o_mosi_0         :   std_logic := '0';
     signal o_rx_data_0      :   std_logic_vector(C_data_length - 1 downto 0):=(others => '0');
     signal o_rx_data_1      :   std_logic_vector(C_data_length - 1 downto 0):=(others => '0');
+-- STM SIM signals
+    signal stm_mosi         :   std_logic :='0';
+    signal stm_cs           :   std_logic :='0';
+    signal stm_spi_clk      :   std_logic :='0';
+    signal stm_miso         :   std_logic :='0';
+    signal trigger          :   std_logic :='1';
 
 begin
-
+    
+    STM32_SIM : entity work.master_board_spi
+    generic map (
+        C_clk_div   => 2,
+        C_cmd_size  => 8,
+        C_data_size => 16
+    )
+    port map (
+        o_mosi      =>stm_mosi,
+        o_cs        =>stm_cs,
+        o_spi_clk   =>stm_spi_clk,
+        i_miso      =>stm_miso,
+        i_clk       =>clk,
+        i_trigger   =>trigger,
+        i_reset_n   =>reset_n
+    );
 
     TOP_ENT: entity work.TOP 
     GENERIC MAP(

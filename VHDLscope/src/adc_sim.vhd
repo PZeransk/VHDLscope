@@ -83,10 +83,10 @@ if falling_edge(i_clk) then
     if  i_cs = '0' then
 
         if(data_byte_cnt >= C_data_length) then
-        adc_data <= '0'; 
+        o_miso0 <= '0'; 
         else
            -- o_miso0 <= r_adc_data0(r_adc_data0'high);
-           adc_data <= r_adc_data0(C_data_length-1-data_byte_cnt);
+           o_miso0 <= r_adc_data0(C_data_length-1-data_byte_cnt);
        --     data_byte_cnt <= data_byte_cnt + 1;
         end if;
     else
@@ -96,6 +96,6 @@ if falling_edge(i_clk) then
 end if;
 
 end process;
-o_miso0 <= adc_data;
+--o_miso0 <= adc_data;
 
 end Behavioral;

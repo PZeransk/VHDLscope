@@ -48,7 +48,7 @@ architecture Behavioral of TOP_SIM is
 
     signal i_clk			:   std_logic := '0';
     signal reset_n		    :   std_logic := '1';
-    signal enable		    :   std_logic := '1';
+    signal enable		    :   std_logic := '0';
 
     signal miso_1           :   std_logic := '0';
     signal o_spi_clk        :   std_logic := '0';
@@ -88,9 +88,10 @@ begin
     port map(
         i_clk			=>clk,
         i_reset_n		=>reset_n,
-    
+        i_cs            =>stm_cs,
+        i_spi_clk       =>stm_spi_clk,
         i_enable		=>enable,
-    
+        i_miso_stm      =>stm_mosi,
         i_miso_0		=>miso_0,
         i_miso_1		=>miso_1,
     
@@ -125,6 +126,9 @@ begin
         wait for clk_time;
     end process;
 
+    reset_n <= '0', '1' after 40 ns;
+    trigger <= '0','1' after 100 ns;
+    
 
 end Behavioral;
 

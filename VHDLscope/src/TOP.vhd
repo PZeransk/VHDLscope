@@ -12,8 +12,10 @@ entity TOP is
     PORT(
         i_clk			:	in 	std_logic;
         i_reset_n		:	in 	std_logic;
-        --i_cs 			:	in 	std_logic;
+        i_cs 			:	in 	std_logic;
+        i_spi_clk 		: 	in  std_logic;
         i_enable		:	in 	std_logic;
+        i_miso_stm		: 	in  std_logic;
     --	i_clk_polarity	:	in  std_logic;
     --	i_clk_phase		:	in 	std_logic;
         i_miso_0		:	in 	std_logic;
@@ -40,9 +42,10 @@ generic map(
 port map(
 	i_clk			=>i_clk	,
 	i_reset_n		=>i_reset_n,
-
+	i_cs            =>i_cs,
+    i_spi_clk       =>i_spi_clk,
 	i_enable		=>i_enable,
-
+	i_miso_stm		=>i_miso_stm,
 	i_miso_0		=>i_miso_0,
 	i_miso_1		=>i_miso_1,
 

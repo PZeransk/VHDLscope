@@ -11,10 +11,14 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="19" />
+   <WVObjectSize size="22" />
    <wvobject fp_name="/top_sim/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/miso_0" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">miso_0</obj_property>
+      <obj_property name="ObjectShortName">miso_0</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/cs" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">cs</obj_property>
@@ -36,10 +40,6 @@
       <obj_property name="ElementShortName">miso_1</obj_property>
       <obj_property name="ObjectShortName">miso_1</obj_property>
    </wvobject>
-   <wvobject fp_name="/top_sim/TOP_ENT/i_miso_0" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">i_miso_0</obj_property>
-      <obj_property name="ObjectShortName">i_miso_0</obj_property>
-   </wvobject>
    <wvobject fp_name="/top_sim/o_spi_clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">o_spi_clk</obj_property>
       <obj_property name="ObjectShortName">o_spi_clk</obj_property>
@@ -48,44 +48,56 @@
       <obj_property name="ElementShortName">o_mosi_0</obj_property>
       <obj_property name="ObjectShortName">o_mosi_0</obj_property>
    </wvobject>
-   <wvobject fp_name="/top_sim/o_rx_data_0" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">o_rx_data_0[11:0]</obj_property>
-      <obj_property name="ObjectShortName">o_rx_data_0[11:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/top_sim/o_rx_data_1" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">o_rx_data_1[11:0]</obj_property>
       <obj_property name="ObjectShortName">o_rx_data_1[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/stm_cs" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">stm_cs</obj_property>
+      <obj_property name="ObjectShortName">stm_cs</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/stm_spi_clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">stm_spi_clk</obj_property>
+      <obj_property name="ObjectShortName">stm_spi_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/stm_mosi" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">stm_mosi</obj_property>
+      <obj_property name="ObjectShortName">stm_mosi</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/stm_miso" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">stm_miso</obj_property>
+      <obj_property name="ObjectShortName">stm_miso</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/trigger" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">trigger</obj_property>
+      <obj_property name="ObjectShortName">trigger</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/c_data_length" type="other" db_ref_id="1">
       <obj_property name="ElementShortName">c_data_length</obj_property>
       <obj_property name="ObjectShortName">c_data_length</obj_property>
    </wvobject>
-   <wvobject fp_name="/top_sim/clk_time" type="other" db_ref_id="1">
-      <obj_property name="ElementShortName">clk_time</obj_property>
-      <obj_property name="ObjectShortName">clk_time</obj_property>
-   </wvobject>
-   <wvobject fp_name="/top_sim/cs_h" type="other" db_ref_id="1">
-      <obj_property name="ElementShortName">cs_h</obj_property>
-      <obj_property name="ObjectShortName">cs_h</obj_property>
-   </wvobject>
-   <wvobject fp_name="/top_sim/cs_l" type="other" db_ref_id="1">
-      <obj_property name="ElementShortName">cs_l</obj_property>
-      <obj_property name="ObjectShortName">cs_l</obj_property>
-   </wvobject>
-   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_rx_data_0" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">o_rx_data_0[11:0]</obj_property>
-      <obj_property name="ObjectShortName">o_rx_data_0[11:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/r_current_state" type="other" db_ref_id="1">
       <obj_property name="ElementShortName">r_current_state</obj_property>
       <obj_property name="ObjectShortName">r_current_state</obj_property>
    </wvobject>
-   <wvobject fp_name="/top_sim/ADC_SIM_1/data_byte_cnt" type="other" db_ref_id="1">
-      <obj_property name="ElementShortName">data_byte_cnt</obj_property>
-      <obj_property name="ObjectShortName">data_byte_cnt</obj_property>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/rx_cmd" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rx_cmd[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rx_cmd[7:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/top_sim/ADC_SIM_1/r_adc_data0" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">r_adc_data0[11:0]</obj_property>
-      <obj_property name="ObjectShortName">r_adc_data0[11:0]</obj_property>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/sample_cnt" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">sample_cnt</obj_property>
+      <obj_property name="ObjectShortName">sample_cnt</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/w_miso_0" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">w_miso_0</obj_property>
+      <obj_property name="ObjectShortName">w_miso_0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/STM32_SIM/r_current_state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">r_current_state</obj_property>
+      <obj_property name="ObjectShortName">r_current_state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/sample_max" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">sample_max</obj_property>
+      <obj_property name="ObjectShortName">sample_max</obj_property>
    </wvobject>
 </wave_config>

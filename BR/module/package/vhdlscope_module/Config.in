@@ -1,0 +1,10 @@
+comment "You need to enable BR2_LINUX_KERNEL for VHDLscope to work"
+	depends on !BR2_LINUX_KERNEL
+config BR2_PACKAGE_VHDLSCOPE_MODULE
+    bool "module for VHDLscope control"
+    depends on BR2_LINUX_KERNEL
+    help
+      VHDLscope module support
+
+      see: datasheet VHDL code.
+depends on BR2_LINUX_KERNEL

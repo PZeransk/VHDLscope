@@ -1,0 +1,1 @@
+source "$BR2_EXTERNAL_VHDLSCOPE_PATH/package/vhdlscope_module/Config.in"

@@ -1,0 +1,11 @@
+VHDLSCOPE_MODULE_VERSION = 1.0
+VHDLSCOPE_MODULE_SITE = $(BR2_EXTERNAL_VHDLSCOPE_PATH)/module_src
+VHDLSCOPE_MODULE_SITE_METHOD = local
+VHDLSCOPE_MODULE_LICENSE = GPL-2.0
+#VHDL_SCOPE_MODULE_KCONFIG_FILE = $(BR2_EXTERNAL_VHDLSCOPE_PATH)/module_src/Kconfig
+
+
+
+$(eval $(kernel-module))
+$(eval $(generic-package))
+#$(eval $(kconfig-package))

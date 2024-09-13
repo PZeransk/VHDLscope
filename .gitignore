@@ -12,5 +12,6 @@ VHDLscope/isim
 *.log
 *.cmd
 *.xmsgs 
-
-
+local/*
+.clangd
+.vscode

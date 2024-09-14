@@ -11,7 +11,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="22" />
+   <WVObjectSize size="21" />
    <wvobject fp_name="/top_sim/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -47,10 +47,6 @@
    <wvobject fp_name="/top_sim/o_mosi_0" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">o_mosi_0</obj_property>
       <obj_property name="ObjectShortName">o_mosi_0</obj_property>
-   </wvobject>
-   <wvobject fp_name="/top_sim/o_rx_data_1" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">o_rx_data_1[11:0]</obj_property>
-      <obj_property name="ObjectShortName">o_rx_data_1[11:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/stm_cs" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">stm_cs</obj_property>

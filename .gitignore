@@ -12,6 +12,10 @@ VHDLscope/isim
 *.log
 *.cmd
 *.xmsgs 
+*.debug
+*.lso
+*.tcl
+VHDLscope/planAhead*
 local/*
 .clangd
 .vscode

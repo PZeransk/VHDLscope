@@ -1,0 +1,38 @@
+#**************************************************************************************************************************************************#
+#                                            UCF for ElbertV2 Development Board                                                                    #
+#**************************************************************************************************************************************************#
+CONFIG VCCAUX = "3.3" ;
+ 
+ # Clock 12 MHz
+  NET "i_clk"                  LOC = P129  | IOSTANDARD = LVCMOS33 | PERIOD = 12MHz;
+
+# Reset Switch
+        NET "i_reset_n"          LOC = P80   | PULLUP  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+
+        NET "i_spi_clk" CLOCK_DEDICATED_ROUTE = FALSE;
+
+# indicator LEDs
+
+    NET "o_led"             LOC = P46   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+
+
+####################################################################################################
+# HEADER P1 FPGA->STM
+####################################################################################################
+    NET "i_cs"           LOC = P31   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    NET "i_spi_clk"           LOC = P32   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    NET "i_enable"           LOC = P28   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    NET "i_miso_stm"           LOC = P30   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+
+
+####################################################################################################
+# HEADER P6 FPGA->ADC
+####################################################################################################
+   
+    NET "o_cs"           LOC = P19   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    NET "o_spi_clk"           LOC = P21   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    NET "o_mosi_0"           LOC = P18   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    NET "i_miso_0"           LOC = P20   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    NET "i_miso_1"           LOC = P15   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+
+

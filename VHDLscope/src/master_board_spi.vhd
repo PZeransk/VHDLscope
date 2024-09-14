@@ -31,6 +31,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity master_board_spi is
     generic (
+        C_delay      : integer := 100;
         C_clk_div    : integer := 2;
         C_cmd_size   : integer := 8;
         C_data_size  : integer := 16 -- because stm32mp157 can send only multiplied 8 bit word size
@@ -49,7 +50,9 @@ architecture Behavioral of master_board_spi is
 
 type T_spi_states is (
   SPI_IDLE,
-  SPI_TRANSFER
+  SPI_PRE_TRANSFER,
+  SPI_TRANSFER,
+  SPI_POST_TRANSFER
   );
 
 signal r_current_state  : T_spi_states  := SPI_IDLE;
@@ -63,6 +66,7 @@ signal spi_clk_cnt      : integer range 0 to total_size*2 := 0;
 signal i_clk_polarity : std_logic := '1';
 signal i_clk_phase    : std_logic := '1';
 signal spi_send_reg     : std_logic_vector(total_size - 1 downto 0) := (others => '0');
+signal delay_cnt        : integer range 0 to C_delay := 0;
 
 begin
 
@@ -78,6 +82,9 @@ if i_reset_n = '0' then
 elsif rising_edge(i_clk) then
 
 case r_current_state IS
+--------------------------------------------------------------------------------
+-- IDLE state
+--------------------------------------------------------------------------------
 
   when SPI_IDLE =>
     o_cs <= '0';
@@ -86,8 +93,26 @@ case r_current_state IS
     cmd_to_send <= r_trigger_cmd&sample_size_cmd;
 
     if i_trigger = '0' then
-      r_current_state <= SPI_TRANSFER;
+      r_current_state <= SPI_PRE_TRANSFER;
     end if;
+--------------------------------------------------------------------------------
+-- on stm board data is being transfered long after CS activation
+--------------------------------------------------------------------------------
+
+
+  when SPI_PRE_TRANSFER =>
+  o_cs <= '1';
+
+  if delay_cnt <= C_delay-1 then
+    delay_cnt <= delay_cnt + 1;
+  else
+    delay_cnt <= 0;
+    r_current_state <= SPI_TRANSFER;
+  end if;
+
+--------------------------------------------------------------------------------
+-- data transfer
+--------------------------------------------------------------------------------
 
   when SPI_TRANSFER =>
   o_cs <= '1';
@@ -99,24 +124,43 @@ case r_current_state IS
 
   
 
-      if spi_clk_state = i_clk_phase and spi_clk_cnt <= total_size*2 then 
+      if spi_clk_state = i_clk_phase and spi_clk_cnt < total_size*2 then 
       -- push zero to command to avoid double sending
         cmd_to_send <= cmd_to_send(cmd_to_send'high - 1 downto cmd_to_send'low)&'0';
-        o_mosi <= cmd_to_send(cmd_to_send'high);
+       
       end if;
     
-      if spi_clk_cnt = total_size*2+1 then 
-        r_current_state <= SPI_IDLE;
+      if spi_clk_cnt = total_size*2 then
+        spi_clk_state <= '0'; 
+        r_current_state <= SPI_POST_TRANSFER;
       end if;
-  else 
+  else
+
     clk_cnt <= clk_cnt + 1;
   end if;
+
+--------------------------------------------------------------------------------
+-- on stm board CS state is held long after data transfer
+--------------------------------------------------------------------------------
+
+
+  when SPI_POST_TRANSFER =>
+  o_cs <= '1';
+  spi_clk_state <= '0';
+  if delay_cnt <= C_delay-1 then
+    delay_cnt <= delay_cnt + 1;
+  else
+    delay_cnt <= 0;
+    r_current_state <= SPI_IDLE;
+  end if;
+
+
 end case;
 
 end if;
 
 end process; -- spi_process
 o_spi_clk <= spi_clk_state;
-
+ o_mosi <= cmd_to_send(cmd_to_send'high);
 end Behavioral;
 

@@ -53,8 +53,8 @@ architecture Behavioral of TOP_SIM is
     signal miso_1           :   std_logic := '0';
     signal o_spi_clk        :   std_logic := '0';
     signal o_mosi_0         :   std_logic := '0';
-    signal o_rx_data_0      :   std_logic_vector(C_data_length - 1 downto 0):=(others => '0');
-    signal o_rx_data_1      :   std_logic_vector(C_data_length - 1 downto 0):=(others => '0');
+   -- signal o_rx_data_0      :   std_logic_vector(C_data_length - 1 downto 0):=(others => '0');
+   -- signal o_rx_data_1      :   std_logic_vector(C_data_length - 1 downto 0):=(others => '0');
 -- STM SIM signals
     signal stm_mosi         :   std_logic :='0';
     signal stm_cs           :   std_logic :='0';
@@ -97,9 +97,9 @@ begin
     
         o_cs			=>cs,
         o_spi_clk		=>o_spi_clk,
-        o_mosi_0		=>o_mosi_0,
-        o_rx_data_0		=>o_rx_data_0,
-        o_rx_data_1		=>o_rx_data_1
+        o_mosi_0		=>o_mosi_0
+        --o_rx_data_0		=>o_rx_data_0,
+        --o_rx_data_1		=>o_rx_data_1
     );
 
 

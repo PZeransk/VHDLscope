@@ -72,7 +72,7 @@ begin
 if i_reset_n = '0' then
   clk_cnt <= 0;
   spi_clk_cnt <= 0;
-  o_cs <= '1';
+  o_cs <= '0';
   cmd_to_send <= r_trigger_cmd&sample_size_cmd;
   r_current_state <= SPI_IDLE;
 elsif rising_edge(i_clk) then
@@ -80,7 +80,7 @@ elsif rising_edge(i_clk) then
 case r_current_state IS
 
   when SPI_IDLE =>
-    o_cs <= '1';
+    o_cs <= '0';
     clk_cnt <= 0;
     spi_clk_cnt <= 0;
     cmd_to_send <= r_trigger_cmd&sample_size_cmd;
@@ -90,7 +90,7 @@ case r_current_state IS
     end if;
 
   when SPI_TRANSFER =>
-  o_cs <= '0';
+  o_cs <= '1';
 
   if clk_cnt = C_clk_div-1 then
     clk_cnt <= 0;

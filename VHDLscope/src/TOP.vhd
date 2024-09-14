@@ -24,14 +24,19 @@ entity TOP is
         o_cs			:	out std_logic;
         o_spi_clk		:	out std_logic;
         o_mosi_0		:	out	std_logic;
-        o_rx_data_0		:	out std_logic_vector(C_data_length - 1 downto 0);
-        o_rx_data_1		:	out std_logic_vector(C_data_length - 1 downto 0)
+       -- o_rx_data_0		:	out std_logic_vector(C_data_length - 1 downto 0);
+       -- o_rx_data_1		:	out std_logic_vector(C_data_length - 1 downto 0)
+
+       --debug LED output
+        o_led 			: 	out std_logic
         );
 end TOP;
 
 
 architecture Behavioral of TOP is
 
+signal r_rx_data_0 : std_logic_vector(C_data_length - 1 downto 0) := (others => '0');
+signal r_rx_data_1 : std_logic_vector(C_data_length - 1 downto 0) := (others => '0');
 begin
 
 SPI_MASTER_0: entity work.spi_master
@@ -52,9 +57,14 @@ port map(
 	o_cs			=>o_cs	,
 	o_spi_clk		=>o_spi_clk,
 	o_mosi_0		=>o_mosi_0,
-	o_rx_data_0		=>o_rx_data_0,
-	o_rx_data_1		=>o_rx_data_1
+	o_rx_data_0		=>r_rx_data_0,
+	o_rx_data_1		=>r_rx_data_1
 );
 
+LED_INDICATOR: entity work.led_indicator
+port map (
+	i_clk => i_clk,
+	o_led => o_led
+);
 
 end architecture;

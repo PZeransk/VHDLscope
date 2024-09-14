@@ -114,10 +114,10 @@ o_cs <= '1';
 -- o_mosi <= 'Z';
 
 
-
-IF i_cs = '0' then 
+--CS state is inverted (active high instad of low) on STM32 it will be changed later
+IF i_cs = '1' then 
   r_current_state <= RECEIVE_CMD;
-ELSIF rx_cmd = "00001000" and i_cs = '1' THEN 
+ELSIF rx_cmd = "00001000" and i_cs = '0' THEN 
 
   sample_max <= to_integer(unsigned(sample_cmd));
   r_clk_state <= i_clk_polarity;
@@ -135,7 +135,7 @@ END IF;
 when RECEIVE_CMD =>
 
 
-if i_cs = '1' then
+if i_cs = '0' then
   rx_cmd <= rx_data(rx_data'high downto rx_data'high - 7);
   sample_cmd <= rx_data(rx_data'high-8 downto 0);
   r_current_state <= IDLE_SPI;

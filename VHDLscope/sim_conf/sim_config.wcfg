@@ -11,7 +11,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="21" />
+   <WVObjectSize size="22" />
    <wvobject fp_name="/top_sim/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -95,5 +95,9 @@
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/sample_max" type="other" db_ref_id="1">
       <obj_property name="ElementShortName">sample_max</obj_property>
       <obj_property name="ObjectShortName">sample_max</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/led_dbg" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">led_dbg[7:0]</obj_property>
+      <obj_property name="ObjectShortName">led_dbg[7:0]</obj_property>
    </wvobject>
 </wave_config>

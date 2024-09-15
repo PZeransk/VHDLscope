@@ -28,7 +28,8 @@ entity TOP is
        -- o_rx_data_1		:	out std_logic_vector(C_data_length - 1 downto 0)
 
        --debug LED output
-        o_led 			: 	out std_logic
+        --o_led 			: 	out std_logic
+        o_led_dbg 		: out std_logic_vector(7 downto 0)
         );
 end TOP;
 
@@ -58,13 +59,14 @@ port map(
 	o_spi_clk		=>o_spi_clk,
 	o_mosi_0		=>o_mosi_0,
 	o_rx_data_0		=>r_rx_data_0,
-	o_rx_data_1		=>r_rx_data_1
+	o_rx_data_1		=>r_rx_data_1,
+	o_led_dbg 		=>o_led_dbg
 );
 
-LED_INDICATOR: entity work.led_indicator
-port map (
-	i_clk => i_clk,
-	o_led => o_led
-);
+--LED_INDICATOR: entity work.led_indicator
+--port map (
+--	i_clk => i_clk,
+--	o_led => o_led
+--);
 
 end architecture;

@@ -8,7 +8,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity led_indicator is
 	Generic(
-		C_divider : integer := 12000000 -- there is 12MHz clock currently 
+		C_divider : integer := 1200000 -- there is 12MHz clock currently 
 		);
     Port ( i_clk : in  STD_LOGIC;
            o_led : out  STD_LOGIC);

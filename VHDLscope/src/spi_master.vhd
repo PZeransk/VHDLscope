@@ -45,7 +45,9 @@ PORT(
 	o_spi_clk		:	out std_logic;
 	o_mosi_0		:	out	std_logic;
 	o_rx_data_0		:	out std_logic_vector(C_data_length - 1 downto 0);
-	o_rx_data_1		:	out std_logic_vector(C_data_length - 1 downto 0)
+	o_rx_data_1		:	out std_logic_vector(C_data_length - 1 downto 0);
+  --debug leds output, should display received command
+  o_led_dbg     : out std_logic_vector(C_cmd_size - 1 downto 0)
 	);
 end spi_master;
 
@@ -123,6 +125,7 @@ ELSIF rx_cmd = "00001000" and i_cs = '0' THEN
   r_clk_state <= i_clk_polarity;
   clk_cnt_ratio <= 0;
   clk_cnt <= 0;
+  o_cs <= '0';
   --o_spi_clk <= r_clk_state;
   r_current_state <= TRANSFER;
 ELSE
@@ -145,7 +148,7 @@ end if;
 --------------------------------------------------------------------------------
 
 when TRANSFER =>
-o_cs <= '0';
+
 
 if sample_cnt < sample_max then 
     if(clk_cnt_ratio = C_clk_ratio - 1) then
@@ -172,7 +175,7 @@ if sample_cnt < sample_max then
         sample_cnt <= sample_cnt + 1;
         --r_current_state <= IDLE_SPI;
       else
-        
+        o_cs <= '0';
        -- r_current_state <= TRANSFER;
       end if;
     
@@ -182,6 +185,9 @@ if sample_cnt < sample_max then
     end if;
 else
   -- reseting rx_cmd so it will be forced to wait for another tranfer from kernel
+  -- without this cs becomes a clock, comment if you want to see 
+  -- something on debug LEDs
+
   rx_cmd <= (others => '0');
   r_current_state <= IDLE_SPI;
 end if;
@@ -193,6 +199,8 @@ end if;
 
 end process;
 
+-- Display command on LED
+o_led_dbg <= rx_cmd;
 
 --------------------------------------------------------------------------------
 --RECEIVE COMMAND PROCESS

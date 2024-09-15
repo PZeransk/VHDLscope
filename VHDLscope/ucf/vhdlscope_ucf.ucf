@@ -13,7 +13,14 @@ CONFIG VCCAUX = "3.3" ;
 
 # indicator LEDs
 
-    NET "o_led"             LOC = P46   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    NET "o_led_dbg[7]"             LOC = P46   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12; #D8
+    NET "o_led_dbg[6]"             LOC = P47   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12; #D7
+    NET "o_led_dbg[5]"             LOC = P48   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12; #D6
+    NET "o_led_dbg[4]"             LOC = P49   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12; #D5
+    NET "o_led_dbg[3]"             LOC = P50   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12; #D4
+    NET "o_led_dbg[2]"             LOC = P51   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12; #D3
+    NET "o_led_dbg[1]"             LOC = P54   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12; #D2
+    NET "o_led_dbg[0]"             LOC = P55   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12; #D1
 
 
 ####################################################################################################

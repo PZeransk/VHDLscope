@@ -74,10 +74,13 @@ architecture Behavioral of i2c_master is
 	signal in_clk_cnt 	: integer range 0 to clk_divider := 0;
 	signal div_cnt 		: integer range 0 to 4 :=0; -- 4 because clk_divider should be counted 4 times for one full sequence
 	signal clk_ena 		: std_logic := '0';
+	signal data_cnt 	: integer range 0 to C_data_length := 0;
 --MCP4726Ax adresses are in datasheet on page 46
 	signal r_dummy_data : std_logic_vector(C_data_length - 1 downto 0):="10101010";
 	signal r_addr_A0 	: std_logic_vector(C_addr_length - 1 downto 0):="1100000";
 	signal r_addr_A2 	: std_logic_vector(C_addr_length - 1 downto 0):="1100010";
+	signal addr_rw  	: std_logic_vector(C_data_length - 1 downto 0):=(others => '0');
+	signal change_data 	: std_logic := '0';
 
 begin
 
@@ -101,6 +104,7 @@ begin
 
 			if div_cnt = 0 then
 				scl_state <= '0';
+
 			elsif div_cnt = 1 then
 				scl_state <= '1';
 			elsif div_cnt = 2 then
@@ -118,10 +122,16 @@ begin
 
 end process; -- i2c_gen_clk
 
+
+
 process(i_clk, i_reset_n) is
 begin
 	if i_reset_n = '0' then
+
+
 		r_current_i2c_state <= IDLE;
+
+
 	elsif rising_edge(i_clk) then
 		CASE r_current_i2c_state IS 
 
@@ -132,15 +142,16 @@ begin
 
 		if i_enable_i2c = '1' then
 		-- pulling sda to zero before scl is a start condition
-			
 			r_current_i2c_state <= START;
+			addr_rw <= i_addr_i2c&i_r_w_bit;
+
 		end if;
 
 		when START =>
 		--pulling scl low after SDA low completes start condition
 
 			sda_state <= '0';
-
+			data_cnt <= 0;
 			--scl_state <= '0'; -- pull to zero after and goto nex state after setup tiem
 			r_current_i2c_state <= ADRESS;
 			-- enable scl clock generation process
@@ -148,36 +159,100 @@ begin
 
 		when ADRESS => 
 
-
-			-- clock cycle divided into 4 parts
-			if div_cnt = 0 then
-
-				sda_state <= r_addr_A0(r_addr_A0'high);
-				r_addr_A0 <= r_addr_A0(r_addr_A0'high-1 downto r_addr_A0'low)&r_addr_A0(r_addr_A0'high);
-
-			elsif div_cnt = 1 then
+			if data_cnt < C_data_length then
 				
-			elsif div_cnt = 2 then
-				
-			elsif div_cnt = 3 then
+				if div_cnt = 0 then
+					if in_clk_cnt = 0 then
 
+
+					--sda_state <=addr_rw(C_data_length - 1 - data_cnt);
+					sda_state <=addr_rw(addr_rw'high);
+					addr_rw <=addr_rw(addr_rw'high - 1 downto addr_rw'low)&addr_rw(addr_rw'high);
+					
+					end if;
+				elsif div_cnt = 1 then
+					
+				elsif div_cnt = 2 then
+					
+				elsif div_cnt = 3 then
+					if in_clk_cnt = 0 then
+					data_cnt <= data_cnt + 1;
+					
+					end if;	
+				end if;			
+				r_current_i2c_state <= ADRESS;
+
+			else
+				r_current_i2c_state <= SLV_ACK_1;
 			end if;
 		when SLV_ACK_1 =>
 
 		-- if ack is ok, go to state described with R/W bit
+		-- ack is read in the middle of scl clock pulse
+
+
+			if io_sda = '0' and div_cnt = 2 then
+			data_cnt <= 0;
+				if i_r_w_bit = '0' then
+					r_current_i2c_state <= I2C_WRITE;
+				elsif i_r_w_bit = '1' then
+					r_current_i2c_state <= I2C_READ;
+				end if;
+			elsif io_sda = '1' and div_cnt = 2 then 
+			r_current_i2c_state <= I2C_FINISH;
+			end if;
+
+
 
 		when I2C_READ =>
 
-		-- currently not needed
+		-- Read EEPROM or Volitale memory
 
 		when I2C_WRITE =>
 
-		-- write data to DAC then wait for 
+		-- write data to DAC then wait for ack
+		if data_cnt < C_data_length then
+				
+				if div_cnt = 0 then
+					if in_clk_cnt = 0 then
+
+
+					--sda_state <=addr_rw(C_data_length - 1 - data_cnt);
+					sda_state <=addr_rw(addr_rw'high);
+					addr_rw <=addr_rw(addr_rw'high - 1 downto addr_rw'low)&addr_rw(addr_rw'high);
+					
+					end if;
+				elsif div_cnt = 1 then
+					
+				elsif div_cnt = 2 then
+					
+				elsif div_cnt = 3 then
+					if in_clk_cnt = 0 then
+					data_cnt <= data_cnt + 1;
+					
+					end if;	
+				end if;			
+				r_current_i2c_state <= I2C_WRITE;
+
+			else
+				r_current_i2c_state <= SLV_ACK_2;
+			end if;
 
 		when SLV_ACK_2 =>
 
 		-- if OK go back to I2C_WRITE untill data stream isnt finished or some
 		-- other stop condition isnt met
+
+			if io_sda = '0' and div_cnt = 0 then
+			data_cnt <= 0;
+				if i_r_w_bit = '0' then
+					r_current_i2c_state <= I2C_WRITE;
+				elsif i_r_w_bit = '1' then
+					r_current_i2c_state <= I2C_READ;
+				end if;
+			elsif io_sda = '1' and div_cnt = 0 then 
+			r_current_i2c_state <= I2C_FINISH;
+			end if;
 
 		when I2C_FINISH =>
 
@@ -185,6 +260,9 @@ begin
 		-- wait for hold/setup time
 		-- pull SDA high
 		-- go to I2C_IDLE
+		clk_ena <= '0';
+		r_current_i2c_state <= IDLE;
+
 
 		end CASE;
 	end if;

@@ -62,6 +62,15 @@ architecture Behavioral of TOP_SIM is
     signal stm_spi_clk      :   std_logic :='0';
     signal stm_miso         :   std_logic :='0';
     signal trigger          :   std_logic :='1';
+-- i2c signals
+    signal enable_i2c       :   std_logic :='0';
+    signal addr_i2c         :   std_logic_vector(6 downto 0):="1100010"; --7 bit addr
+    signal r_w_bit          :   std_logic :='0';
+    signal data_0           :   std_logic_vector(7 downto 0):="10101010"; -- 8 bit data
+    signal busy             :   std_logic :='0';
+    signal read_data_0      :   std_logic_vector(7 downto 0); -- 8 bit data
+    signal scl              :   std_logic :='0';
+    signal sda              :   std_logic :='0';
 
 begin
     
@@ -101,6 +110,15 @@ begin
         o_mosi_0		=>o_mosi_0,
         --o_rx_data_0		=>o_rx_data_0,
         --o_rx_data_1		=>o_rx_data_1
+        i_enable_i2c    =>enable_i2c,
+        i_addr_i2c      =>addr_i2c,
+        i_r_w_bit       =>r_w_bit,
+        i_data_0        =>data_0,
+        o_busy          =>busy,
+        o_read_data_0   =>read_data_0,
+        io_scl          =>scl,
+        io_sda          =>sda,
+
         o_led_dbg       =>led_dbg
     );
 
@@ -130,7 +148,7 @@ begin
 
     reset_n <= '0', '1' after 40 ns;
     trigger <= '0','1' after 100 ns;
-    
+    enable_i2c <= '0','1' after 200 ns;
 
 end Behavioral;
 

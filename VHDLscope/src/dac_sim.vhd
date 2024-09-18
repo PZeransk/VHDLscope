@@ -8,7 +8,7 @@
 -- Project Name: 
 -- Target Devices: 
 -- Tool versions: 
--- Description: 
+-- Description: Simulated MCP4726
 --
 -- Dependencies: 
 --
@@ -30,31 +30,132 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity dac_sim is
+	generic (
+		C_write_vol_size 		: integer := 36;
+		C_write_vol_reg_size 	: integer := 27;
+		C_write_vol_conf 		: integer := 18;
+		C_write_all_meme 		: integer := 36;
+		C_addr_len 				: integer := 7;
+		C_data_len 				: integer := 8
+	);
     Port ( io_sda : inout  STD_LOGIC;
-           io_scl : inout  STD_LOGIC);
+           io_scl : inout  STD_LOGIC;
+           i_dev_addr : in std_logic(C_addr_len - 1 downto 0)
+           );
 end dac_sim;
 
 architecture Behavioral of dac_sim is
 	type T_dac_state is (
 		IDLE,
-		READ_ADDR, -- ack at the end
+		READ_ADDR, -- ack at the end 
+		--SLV_ACK, -- should be active on falling egde of the scl
+		WRITE_DATA, -- ack at the end
 		READ_DATA, -- ack at the end
 		STOP_STATE
 		);
 
+	signal r_dac_state 		: T_dac_state := IDLE;
+	signal scl_cnt 			: integer range 0 to C_write_vol_size := 0; -- the biggest size
+	-- first 8 bits are address and rw bit
+	signal addr_reg 		: std_logic_vector(C_addr_len - 1 downto 0) := (others => '0');
+	signal rw_bit 			: std_logic := '0';
+	--according to datasheet there should be three 8 bit words, which makes up to 24 bit
+	signal write_data_reg	: std_logic_vector(23 downto 0) := (others => '0');
+	signal cmd_reg 			: std_logic_vector(C_data_len - 1 downto 0) := (others => '0');
+	signal data_reg_0 		: std_logic_vector(C_data_len - 1 downto 0) := (others => '0');
+	signal data_reg_1		: std_logic_vector(C_data_len - 1 downto 0) := (others => '0');
+	-- integer value for voltage output
+	signal voltage 			: integer range 0 to 2048:=0;
+
+	signal start_ok 		: std_logic := '0';
+	signal start_cond 		: std_logic_vector(1 downto 0);
 begin
+
+
+start_proc : process(io_sda, io_scl) is
+begin
+
+	if falling_edge(io_scl) and io_sda = '0'  then
+		start_ok <= '1';
+	else 
+		start_ok <= '0';
+	end if;
+end process; -- start_proc
+
+
 
 -- data should be established before rising edge of the clock
 -- so it can be read that way
-
 rx_data : process(io_scl) is
-	
-
-
 begin
-	
+	if rising_edge(io_scl) then
+		case r_dac_state is 
+			when IDLE =>
+				scl_cnt <= 0;
+				if start_ok = '1' then
+					r_dac_state <= READ_ADDR;
+				end if;
+			when READ_ADDR =>
 
-end process; -- rx_data
+
+				if scl_cnt <= 7 then
+					addr_reg <=addr_reg(addr_reg'high - 1 downto addr_reg'low)&io_sda;
+					r_dac_state <= READ_ADDR;
+				elsif scl_cnt = 8 then
+					rw_bit <= io_sda;
+				elsif scl_cnt = 9 and addr_reg = i_dev_addr then
+					io_scl <= '0';
+					if rw_bit = '0' then
+						r_dac_state <= WRITE_DATA;
+					elsif rw_bit = '1' then
+						r_dac_state <= READ_DATA;
+					end if;
+						
+				end if;
+
+
+			when READ_DATA =>
+				if scl_cnt <= 9 then
+					addr_reg <=addr_reg(addr_reg'high - 1 downto addr_reg'low)&io_sda;
+					r_dac_state <= READ_ADDR;
+				elsif scl_cnt = 8 and addr_reg =  i_dev_addr then
+					io_scl <= '0';
+					r_dac_state <= READ_DATA;	
+				end if;
+
+			when WRITE_DATA =>
+
+				if scl_cnt >= 9 then
+					addr_reg <=addr_reg(addr_reg'high - 1 downto addr_reg'low)&io_sda;
+					r_dac_state <= WRITE_ADDR;
+				elsif scl_cnt = 8 and addr_reg =  i_dev_addr then
+					io_scl <= '0';
+					r_dac_state <= READ_DATA;	
+				end if;
+
+			when STOP_STATE =>
+				
+				
+		end case;
+	end if;
+
+end process;
+
+	
+scl_counter : process(io_scl) is
+
+begin	
+	if rising_edge(io_scl) and start_ok = '1' then
+		if scl_cnt <= C_write_vol_size then
+
+		else 
+			scl_cnt <= 0;
+		end if;
+
+	end if;
+
+
+end process; -- scl_counter
 
 end Behavioral;
 

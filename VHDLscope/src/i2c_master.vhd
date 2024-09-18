@@ -75,12 +75,17 @@ architecture Behavioral of i2c_master is
 	signal div_cnt 		: integer range 0 to 4 :=0; -- 4 because clk_divider should be counted 4 times for one full sequence
 	signal clk_ena 		: std_logic := '0';
 	signal data_cnt 	: integer range 0 to C_data_length := 0;
+	signal sda_ena_n 	: std_logic := '0';
 --MCP4726Ax adresses are in datasheet on page 46
 	signal r_dummy_data : std_logic_vector(C_data_length - 1 downto 0):="10101010";
 	signal r_addr_A0 	: std_logic_vector(C_addr_length - 1 downto 0):="1100000";
 	signal r_addr_A2 	: std_logic_vector(C_addr_length - 1 downto 0):="1100010";
 	signal addr_rw  	: std_logic_vector(C_data_length - 1 downto 0):=(others => '0');
 	signal change_data 	: std_logic := '0';
+
+-- delay signals
+
+
 
 begin
 
@@ -155,6 +160,8 @@ begin
 			--scl_state <= '0'; -- pull to zero after and goto nex state after setup tiem
 			r_current_i2c_state <= ADRESS;
 			-- enable scl clock generation process
+			-- wait for x ns then enable clock to have right start cond
+
 			clk_ena <= '1';
 
 		when ADRESS => 
@@ -189,7 +196,7 @@ begin
 
 		-- if ack is ok, go to state described with R/W bit
 		-- ack is read in the middle of scl clock pulse
-
+sda_ena_n <= '1';
 
 			if io_sda = '0' and div_cnt = 2 then
 			data_cnt <= 0;
@@ -270,7 +277,7 @@ begin
 end process; -- 
 
 
-io_sda <= sda_state;
+io_sda <= sda_state when (sda_ena_n = '0') else 'Z';
 io_scl <= scl_state;
 
 

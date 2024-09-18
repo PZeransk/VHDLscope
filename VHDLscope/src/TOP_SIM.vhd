@@ -72,6 +72,10 @@ architecture Behavioral of TOP_SIM is
     signal scl              :   std_logic :='0';
     signal sda              :   std_logic :='0';
 
+-- i2c dac sim signals
+    signal MCP4726A2_addr   :   std_logic_vector(6 downto 0):="1100010";
+    signal sda_nc           : std_logic := '0';
+    signal scl_nc           : std_logic := '0';
 begin
     
     STM32_SIM : entity work.master_board_spi
@@ -122,6 +126,12 @@ begin
         o_led_dbg       =>led_dbg
     );
 
+    DAC_SIM_0: entity work.dac_sim 
+    port map (
+        io_sda      => sda,
+        i_scl      => scl,
+        i_dev_addr => MCP4726A2_addr
+    );
 
 
     ADC_SIM_0: entity work.adc_sim

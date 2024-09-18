@@ -11,7 +11,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="19" />
+   <WVObjectSize size="26" />
    <wvobject fp_name="/top_sim/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -80,12 +80,40 @@
       <obj_property name="ElementShortName">div_cnt</obj_property>
       <obj_property name="ObjectShortName">div_cnt</obj_property>
    </wvobject>
-   <wvobject fp_name="/top_sim/TOP_ENT/I2C_MASTER_0/data_cnt" type="other" db_ref_id="1">
-      <obj_property name="ElementShortName">data_cnt</obj_property>
-      <obj_property name="ObjectShortName">data_cnt</obj_property>
-   </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/I2C_MASTER_0/addr_rw" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">addr_rw[7:0]</obj_property>
       <obj_property name="ObjectShortName">addr_rw[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/DAC_SIM_0/r_dac_state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">r_dac_state</obj_property>
+      <obj_property name="ObjectShortName">r_dac_state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/DAC_SIM_0/addr_reg" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addr_reg[6:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_reg[6:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/DAC_SIM_0/write_data_reg" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">write_data_reg[23:0]</obj_property>
+      <obj_property name="ObjectShortName">write_data_reg[23:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/DAC_SIM_0/start_ok" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">start_ok</obj_property>
+      <obj_property name="ObjectShortName">start_ok</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/scl_nc" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">scl_nc</obj_property>
+      <obj_property name="ObjectShortName">scl_nc</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/DAC_SIM_0/sda_drive" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">sda_drive</obj_property>
+      <obj_property name="ObjectShortName">sda_drive</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/DAC_SIM_0/r_dac_state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">r_dac_state</obj_property>
+      <obj_property name="ObjectShortName">r_dac_state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/DAC_SIM_0/addr_reg" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addr_reg[6:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_reg[6:0]</obj_property>
    </wvobject>
 </wave_config>

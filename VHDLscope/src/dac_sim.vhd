@@ -49,8 +49,8 @@ architecture Behavioral of dac_sim is
 		IDLE,
 		READ_ADDR, -- ack at the end 
 		--SLV_ACK, -- should be active on falling egde of the scl
-		WRITE_DATA, -- ack at the end
-		READ_DATA, -- ack at the end
+		WRITE_DATA, -- ack at the end, write data to vol register
+		READ_DATA, -- ack at the end, read data from memory and send it back to master
 		STOP_STATE
 		);
 
@@ -91,25 +91,25 @@ end process; -- start_proc
 -- so it can be read that way
 rx_data : process(i_scl) is
 begin
-	if rising_edge(i_scl) then
+	--if rising_edge(i_scl) then
 		case r_dac_state is 
 			when IDLE =>
 				--scl_cnt <= 0;
 				sda_drive <= '0';
 				if start_ok = '1' then
 					r_dac_state <= READ_ADDR;
-					start_ok <= '0'; -- resets start_ok value
+					--start_ok <= '0'; -- resets start_ok value
 				end if;
 			when READ_ADDR =>
 				sda_drive <= '0';
-
-				if scl_cnt <= 7 then
+			if rising_edge(i_scl) then	
+				if scl_cnt <= 6 then
 					addr_reg <=addr_reg(addr_reg'high - 1 downto addr_reg'low)&io_sda;
 					r_dac_state <= READ_ADDR;
 					
-				elsif scl_cnt = 8 then
+				elsif scl_cnt = 7 then
 					rw_bit <= io_sda;
-				elsif (scl_cnt = 9) then
+				elsif (scl_cnt = 8) then
 						if addr_reg = i_dev_addr then
 							sda_drive <= '1';
 							ack_ok <= '1';
@@ -124,35 +124,33 @@ begin
 							r_dac_state <= IDLE;
 						end if;
 				end if;
-
+			end if;
 
 			when READ_DATA =>
+			if rising_edge(i_scl) then
 				if scl_cnt <= 9 then
 					addr_reg <=addr_reg(addr_reg'high - 1 downto addr_reg'low)&io_sda;
 					r_dac_state <= READ_ADDR;
 					sda_drive <= '0';
-				elsif (scl_cnt = 8 and addr_reg =  i_dev_addr) then
+				elsif (scl_cnt = 17 and addr_reg =  i_dev_addr) then
 					--io_sda <= '0';
 					r_dac_state <= READ_DATA;	
 				end if;
-
-			when WRITE_DATA =>
+			end if;
+			when WRITE_DATA => 
 				sda_drive <= '0';
+			if rising_edge(i_scl) then
 				if scl_cnt >= 9 then
 
-					addr_reg <=addr_reg(addr_reg'high - 1 downto addr_reg'low)&io_sda;
-					r_dac_state <= WRITE_DATA;
-				elsif (scl_cnt = 8 and addr_reg =  i_dev_addr) then
-					--io_sda <= '0';
-					sda_drive <= '1';
-					r_dac_state <= READ_DATA;	
+					write_data_reg <=write_data_reg(write_data_reg'high - 1 downto write_data_reg'low)&io_sda;
+					r_dac_state <= WRITE_DATA;	
 				end if;
-
+			end if;
 			when STOP_STATE =>
 				
 				
 		end case;
-	end if;
+	--end if;
 
 end process;
 
@@ -167,13 +165,13 @@ begin
 			scl_cnt <= 0;
 		end if;
 	else 
-		scl_cnt <= 0;
+		--scl_cnt <= 0;
 	end if;
 
 
 end process; -- scl_counter
 
-io_sda <= 'Z' when (sda_drive = '0') else ack_ok;
+io_sda <= 'Z' when (sda_drive = '0') else NOT ack_ok; -- ack active is 0 on sda, but 1 in code, should be reversed
 
 --i_scl <= i_scl;
 

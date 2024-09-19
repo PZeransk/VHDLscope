@@ -46,6 +46,7 @@ entity i2c_master is
 	i_data_0 		: in  std_logic_vector(C_data_length - 1 downto 0);
 	o_busy 			: out std_logic;
 	o_read_data_0	: out std_logic_vector(C_data_length - 1 downto 0);
+	o_ack_err 		: out std_logic;
 	io_scl			: inout std_logic;
 	io_sda 			: inout std_logic
 	);
@@ -135,7 +136,7 @@ begin
 
 
 		r_current_i2c_state <= IDLE;
-
+		o_ack_err <= '0';
 
 	elsif rising_edge(i_clk) then
 		CASE r_current_i2c_state IS 
@@ -143,8 +144,9 @@ begin
 		when IDLE => 
 		-- idle should be active for setup/hold time if I2C_FINISH state didnt happen
 		--scl_state <= '1';
+		sda_ena_n <= '0';
 		sda_state <= '1';
-
+		o_ack_err <= '0';
 		if i_enable_i2c = '1' then
 		-- pulling sda to zero before scl is a start condition
 			r_current_i2c_state <= START;
@@ -165,7 +167,7 @@ begin
 			clk_ena <= '1';
 
 		when ADRESS => 
-
+			sda_ena_n <= '0';
 			if data_cnt < C_data_length then
 				
 				if div_cnt = 0 then
@@ -190,24 +192,63 @@ begin
 				r_current_i2c_state <= ADRESS;
 
 			else
+				--data_cnt <= 0;
+				sda_ena_n <= '1';
 				r_current_i2c_state <= SLV_ACK_1;
 			end if;
 		when SLV_ACK_1 =>
 
 		-- if ack is ok, go to state described with R/W bit
 		-- ack is read in the middle of scl clock pulse
-sda_ena_n <= '1';
+			sda_ena_n <= '1';
 
-			if io_sda = '0' and div_cnt = 2 then
-			data_cnt <= 0;
+			if data_cnt <= C_data_length then
+				
+				if div_cnt = 0 then
+
+				elsif div_cnt = 1 then
+					
+				elsif div_cnt = 2 then
+					
+				elsif div_cnt = 3 then
+					if in_clk_cnt = 0 then
+					data_cnt <= data_cnt + 1;
+					
+					end if;	
+				end if;			
+				r_current_i2c_state <= SLV_ACK_1;
+
+			else
 				if i_r_w_bit = '0' then
+					data_cnt <= 0;
 					r_current_i2c_state <= I2C_WRITE;
 				elsif i_r_w_bit = '1' then
+					data_cnt <= 0;
 					r_current_i2c_state <= I2C_READ;
+				else 
+					data_cnt <= 0;
+					r_current_i2c_state <= I2C_FINISH;
 				end if;
-			elsif io_sda = '1' and div_cnt = 2 then 
-			r_current_i2c_state <= I2C_FINISH;
+				
+	
 			end if;
+
+
+
+				--if io_sda = '0' and div_cnt = 3 then
+				--data_cnt <= 0;
+				--	if i_r_w_bit = '0' then
+				--		r_current_i2c_state <= I2C_WRITE;
+				--	elsif i_r_w_bit = '1' then
+				--		r_current_i2c_state <= I2C_READ;
+				--	end if;
+				----elsif io_sda = '1' and div_cnt = 2 then 
+				----	o_ack_err <= '1';
+				----	r_current_i2c_state <= I2C_FINISH;
+				--else 
+				--	o_ack_err <= '1';
+				--	r_current_i2c_state <= I2C_FINISH;
+				--end if;
 
 
 
@@ -216,7 +257,7 @@ sda_ena_n <= '1';
 		-- Read EEPROM or Volitale memory
 
 		when I2C_WRITE =>
-
+		sda_ena_n <= '0';
 		-- write data to DAC then wait for ack
 		if data_cnt < C_data_length then
 				
@@ -249,20 +290,24 @@ sda_ena_n <= '1';
 
 		-- if OK go back to I2C_WRITE untill data stream isnt finished or some
 		-- other stop condition isnt met
-
-			if io_sda = '0' and div_cnt = 0 then
+			sda_ena_n <= '1';
+			if io_sda = '0' and div_cnt = 2 then
 			data_cnt <= 0;
 				if i_r_w_bit = '0' then
 					r_current_i2c_state <= I2C_WRITE;
 				elsif i_r_w_bit = '1' then
 					r_current_i2c_state <= I2C_READ;
 				end if;
-			elsif io_sda = '1' and div_cnt = 0 then 
+			--elsif io_sda = '1' and div_cnt = 2 then 
+			--r_current_i2c_state <= I2C_FINISH;
+			else 
+			o_ack_err <= '1';
 			r_current_i2c_state <= I2C_FINISH;
+
 			end if;
 
 		when I2C_FINISH =>
-
+		sda_ena_n <= '0';
 		-- pull SCL high
 		-- wait for hold/setup time
 		-- pull SDA high
@@ -278,6 +323,9 @@ end process; --
 
 
 io_sda <= sda_state when (sda_ena_n = '0') else 'Z';
+
+
+
 io_scl <= scl_state;
 
 

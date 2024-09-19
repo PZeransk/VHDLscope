@@ -50,8 +50,9 @@ end TOP;
 
 architecture Behavioral of TOP is
 
-signal r_rx_data_0 : std_logic_vector(C_data_length - 1 downto 0) := (others => '0');
-signal r_rx_data_1 : std_logic_vector(C_data_length - 1 downto 0) := (others => '0');
+signal r_rx_data_0 	: std_logic_vector(C_data_length - 1 downto 0) := (others => '0');
+signal r_rx_data_1 	: std_logic_vector(C_data_length - 1 downto 0) := (others => '0');
+signal ack_err 		: std_logic:='0';
 begin
 
 SPI_MASTER_0: entity work.spi_master
@@ -93,6 +94,7 @@ port map (
 	i_data_0 		=>i_data_0,
 	o_busy 			=>o_busy,
 	o_read_data_0	=>o_read_data_0,
+	o_ack_err 		=>ack_err,
 	io_scl			=>io_scl,
 	io_sda 			=>io_sda
 );

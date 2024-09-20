@@ -90,6 +90,10 @@ architecture Behavioral of i2c_master is
 
 begin
 
+
+
+
+
 i2c_gen_clk : process(i_clk) is
 begin
 
@@ -112,12 +116,12 @@ begin
 				scl_state <= '0';
 
 			elsif div_cnt = 1 then
-				scl_state <= '1';
+				scl_state <= '0';
 			elsif div_cnt = 2 then
 				scl_state <= '1';
 			elsif div_cnt = 3 then
 				
-				scl_state <= '0';
+				scl_state <= '1';
 			end if;
 	
 	
@@ -144,6 +148,7 @@ begin
 		when IDLE => 
 		-- idle should be active for setup/hold time if I2C_FINISH state didnt happen
 		--scl_state <= '1';
+		clk_ena <= '0';
 		sda_ena_n <= '0';
 		sda_state <= '1';
 		o_ack_err <= '0';
@@ -171,6 +176,8 @@ begin
 			if data_cnt < C_data_length then
 				
 				if div_cnt = 0 then
+					
+				elsif div_cnt = 1 then
 					if in_clk_cnt = 0 then
 
 
@@ -179,8 +186,6 @@ begin
 					addr_rw <=addr_rw(addr_rw'high - 1 downto addr_rw'low)&addr_rw(addr_rw'high);
 					
 					end if;
-				elsif div_cnt = 1 then
-					
 				elsif div_cnt = 2 then
 					
 				elsif div_cnt = 3 then
@@ -193,8 +198,10 @@ begin
 
 			else
 				--data_cnt <= 0;
+				if div_cnt = 1 AND in_clk_cnt = 0 then -- changes at the start of scl count (data change safe region accorfing to datasheet)
 				sda_ena_n <= '1';
 				r_current_i2c_state <= SLV_ACK_1;
+				end if;
 			end if;
 		when SLV_ACK_1 =>
 
@@ -202,54 +209,30 @@ begin
 		-- ack is read in the middle of scl clock pulse
 			sda_ena_n <= '1';
 
-			if data_cnt <= C_data_length then
-				
-				if div_cnt = 0 then
 
+-- this forces slv_ack state to be on for arounf one scl, because previous 
+-- state changes at div_cnt = 1, this basically waits for next div_cnt cycle 
+-- to be active			
+				if div_cnt = 0 then 
+					if i_r_w_bit = '0' and io_sda = '0' then
+						data_cnt <= 0;
+						r_current_i2c_state <= I2C_WRITE;
+					elsif i_r_w_bit = '1' and io_sda = '0'  then
+						data_cnt <= 0;
+						r_current_i2c_state <= I2C_READ;
+					else 
+						data_cnt <= 0;
+						o_ack_err <= '1';
+						sda_ena_n <= '0';
+						r_current_i2c_state <= I2C_FINISH;
+					end if;
 				elsif div_cnt = 1 then
 					
 				elsif div_cnt = 2 then
 					
 				elsif div_cnt = 3 then
-					if in_clk_cnt = 0 then
-					data_cnt <= data_cnt + 1;
-					
-					end if;	
+						
 				end if;			
-				r_current_i2c_state <= SLV_ACK_1;
-
-			else
-				if i_r_w_bit = '0' then
-					data_cnt <= 0;
-					r_current_i2c_state <= I2C_WRITE;
-				elsif i_r_w_bit = '1' then
-					data_cnt <= 0;
-					r_current_i2c_state <= I2C_READ;
-				else 
-					data_cnt <= 0;
-					r_current_i2c_state <= I2C_FINISH;
-				end if;
-				
-	
-			end if;
-
-
-
-				--if io_sda = '0' and div_cnt = 3 then
-				--data_cnt <= 0;
-				--	if i_r_w_bit = '0' then
-				--		r_current_i2c_state <= I2C_WRITE;
-				--	elsif i_r_w_bit = '1' then
-				--		r_current_i2c_state <= I2C_READ;
-				--	end if;
-				----elsif io_sda = '1' and div_cnt = 2 then 
-				----	o_ack_err <= '1';
-				----	r_current_i2c_state <= I2C_FINISH;
-				--else 
-				--	o_ack_err <= '1';
-				--	r_current_i2c_state <= I2C_FINISH;
-				--end if;
-
 
 
 		when I2C_READ =>
@@ -259,19 +242,19 @@ begin
 		when I2C_WRITE =>
 		sda_ena_n <= '0';
 		-- write data to DAC then wait for ack
-		if data_cnt < C_data_length then
+		if data_cnt <= C_data_length then
 				
 				if div_cnt = 0 then
+					
+				elsif div_cnt = 1 then
 					if in_clk_cnt = 0 then
 
 
 					--sda_state <=addr_rw(C_data_length - 1 - data_cnt);
-					sda_state <=addr_rw(addr_rw'high);
-					addr_rw <=addr_rw(addr_rw'high - 1 downto addr_rw'low)&addr_rw(addr_rw'high);
+					sda_state <=r_dummy_data(r_dummy_data'high);
+					r_dummy_data <=r_dummy_data(r_dummy_data'high - 1 downto r_dummy_data'low)&r_dummy_data(r_dummy_data'high);
 					
 					end if;
-				elsif div_cnt = 1 then
-					
 				elsif div_cnt = 2 then
 					
 				elsif div_cnt = 3 then
@@ -283,28 +266,46 @@ begin
 				r_current_i2c_state <= I2C_WRITE;
 
 			else
-				r_current_i2c_state <= SLV_ACK_2;
+				if div_cnt = 1 AND in_clk_cnt = 0 then -- changes at the start of scl count (data change safe region accorfing to datasheet)
+					sda_ena_n <= '1';
+					r_current_i2c_state <= SLV_ACK_2;
+				end if;
 			end if;
 
 		when SLV_ACK_2 =>
 
 		-- if OK go back to I2C_WRITE untill data stream isnt finished or some
 		-- other stop condition isnt met
-			sda_ena_n <= '1';
-			if io_sda = '0' and div_cnt = 2 then
-			data_cnt <= 0;
-				if i_r_w_bit = '0' then
-					r_current_i2c_state <= I2C_WRITE;
-				elsif i_r_w_bit = '1' then
-					r_current_i2c_state <= I2C_READ;
-				end if;
-			--elsif io_sda = '1' and div_cnt = 2 then 
-			--r_current_i2c_state <= I2C_FINISH;
-			else 
-			o_ack_err <= '1';
-			r_current_i2c_state <= I2C_FINISH;
 
-			end if;
+		sda_ena_n <= '1';
+
+-- this forces slv_ack state to be on for arounf one scl, because previous 
+-- state changes at div_cnt = 1, this basically waits for next div_cnt cycle 
+-- to be active			
+		
+				if div_cnt = 0 then 
+					if i_r_w_bit = '0' and io_sda = '0' then
+						data_cnt <= 0;
+						r_current_i2c_state <= I2C_WRITE;
+					elsif i_r_w_bit = '1' and io_sda = '0'  then
+						data_cnt <= 0;
+						r_current_i2c_state <= I2C_READ;
+					else 
+						data_cnt <= 0;
+						o_ack_err <= '1';
+						sda_ena_n <= '0';
+						r_current_i2c_state <= I2C_FINISH;
+					end if;
+				elsif div_cnt = 1 then
+					
+				elsif div_cnt = 2 then
+					
+				elsif div_cnt = 3 then
+					
+					
+					--end if;	
+				end if;	
+
 
 		when I2C_FINISH =>
 		sda_ena_n <= '0';
@@ -312,7 +313,8 @@ begin
 		-- wait for hold/setup time
 		-- pull SDA high
 		-- go to I2C_IDLE
-		clk_ena <= '0';
+		sda_state <= '0';
+		--
 		r_current_i2c_state <= IDLE;
 
 

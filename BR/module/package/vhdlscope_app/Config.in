@@ -1,0 +1,5 @@
+config BR2_PACKAGE_VHDLSCOPE_APP
+    bool "App for VHDLscope control"
+    depends on BR2_LINUX_KERNEL
+    help
+      Application for controlling VHDLscope via linux kernel

@@ -12,13 +12,16 @@
 #include <unistd.h>
 #include <stdint.h>
 
-#define arg_cnt 3
-
+#define arg_cnt 2 // only to include path to device
+#define gen_arg_cnt 5
+#define meas_arg_cnt 4
 
 void print_use_info(){
-    printf("Bad arguments! \n\
-    Avalible argumens are:\n\
-    measure signal: [spi path] [measure] [meas_cnt] [sample_rate]\n");
+printf("Bad arguments! \n\
+Avalible argumens are:\n\
+measure signal: [spi path] [measure] [n_sample]\n\
+generate sinus: [spi path] [gen_sinus] [freq] [amplitude]\n");
+    
 }
 
 void get_args(int argc, char* argv[]){
@@ -54,6 +57,41 @@ int measure_dac(uint16_t n_samples, int fd){
 
     return 0;
 }
+
+int gen_sin_wave(uint16_t freq,uint8_t amplitude, int fd){
+  
+    /*Max output freqency should be around 67 kHz because
+    t_settle = 6 us
+    t_bit = 1/3.4 MHz (with the fastest mode)
+    f_max = 1/(t_settle + 27*t_bit) = 67460 Hz
+    Command described in section 6.1 in MCP4726 datasheet
+    is 27 bit long
+
+    This frequency will be cut down to 16 bit value, because it will
+    fit perfectly in current command structure
+
+    Amplitude is not used for now
+    */
+    
+    uint8_t msg[3];
+    struct spi_ioc_transfer buf[1] = {0};
+
+    printf("Generating sine wave with freqency of %d Hz\n",freq);
+
+    msg[0] = 0b00001001; // gen sin command
+    msg[1] = (uint8_t)(freq & 0xff);
+    msg[2] = (uint8_t)(freq >> 8);
+
+    buf[0].tx_buf = (unsigned long)msg;
+    buf[0].len = 3; 
+
+    if (ioctl(fd, SPI_IOC_MESSAGE(1), buf) < 0){
+        perror("SPI_IOC_MESSAGE");
+        return -1;
+    }
+
+    return 0;
+}
 /*
 argv[0] = app_name
 argv[1] = path_to_spi_dev
@@ -73,8 +111,8 @@ int main(int argc, char* argv[]){
     uint8_t meas_msg[] = {0b00001000, 0b00000000, 0b00000100};
     struct spi_ioc_transfer buf[1] = {0};
 
-    if(argc < arg_cnt){
-        printf( "Not enough arguments\n");
+    if(argc <= arg_cnt){
+        print_use_info();
         return -1;
     }
 
@@ -108,17 +146,21 @@ int main(int argc, char* argv[]){
 
 
 
-    buf[0].tx_buf = (unsigned long)meas_msg;
-    buf[0].len = 3; 
+    //buf[0].tx_buf = (unsigned long)meas_msg;
+    //buf[0].len = 3; 
 
     // send data
-    if (ioctl(fd, SPI_IOC_MESSAGE(1), buf) < 0)
-        perror("SPI_IOC_MESSAGE");
+    //if (ioctl(fd, SPI_IOC_MESSAGE(1), buf) < 0)
+    //    perror("SPI_IOC_MESSAGE");
 
     
-    if(strcmp("measure", argv[2]) == 0)
+    if(strcmp("measure", argv[2]) == 0 && argc == meas_arg_cnt){
         ret = measure_dac(atoi(argv[3]), fd);
-        
+    }else if(strcmp("gen_sinus", argv[2]) == 0 && argc == gen_arg_cnt){
+        ret = gen_sin_wave(atoi(argv[3]), atoi(argv[4]),fd);
+    }else{
+        printf("Wrong command or wrong amount of arguments provided\n");
+    }
  
     if(ret<0)
         printf("command error with error %d \n", ret);

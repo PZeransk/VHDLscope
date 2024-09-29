@@ -78,6 +78,13 @@ architecture Behavioral of TOP_SIM is
     signal scl_nc           : std_logic := '0';
 begin
     
+
+    -- i_cmd_sel cheat sheet for STM32_SIM entity
+    -- "00" - measure signal
+    -- "01" - start function generator
+    -- "10" - not used
+    -- "11" - not used
+
     STM32_SIM : entity work.master_board_spi
     generic map (
         C_clk_div   => 2,
@@ -88,6 +95,7 @@ begin
         o_mosi      =>stm_mosi,
         o_cs        =>stm_cs,
         o_spi_clk   =>stm_spi_clk,
+        i_cmd_sel   =>"01",
         i_miso      =>stm_miso,
         i_clk       =>clk,
         i_trigger   =>trigger,

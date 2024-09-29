@@ -125,6 +125,7 @@ ELSIF rx_cmd = "00001000" and i_cs = '0' THEN
   r_clk_state <= i_clk_polarity;
   clk_cnt_ratio <= 0;
   clk_cnt <= 0;
+  sample_cnt <= 0;
   o_cs <= '0';
   --o_spi_clk <= r_clk_state;
   r_current_state <= TRANSFER;

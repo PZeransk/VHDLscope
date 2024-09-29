@@ -39,6 +39,7 @@ entity master_board_spi is
     Port ( o_mosi      : out STD_LOGIC;
            o_cs        : out STD_LOGIC;
            o_spi_clk   : out STD_LOGIC;
+           i_cmd_sel   : in  std_logic_vector(1 downto 0); -- should make selecting commands easier
            i_miso      : in  STD_LOGIC;
            i_clk       : in  STD_LOGIC; -- it will be internal STM32MP157 clock
            i_trigger   : in  STD_LOGIC; -- trigger is only for simulation, this will be carried out by kernel command
@@ -57,14 +58,15 @@ type T_spi_states is (
 
 signal r_current_state  : T_spi_states  := SPI_IDLE;
 signal r_trigger_cmd    : std_logic_vector(C_cmd_size-1 downto 0)  := "00001000";
+signal r_fun_gen_cmd    : std_logic_vector(C_cmd_size-1 downto 0)  := "00001001";
 signal sample_size_cmd  : std_logic_vector(C_data_size-1 downto 0) := "0000000000000100";
 signal cmd_to_send      : std_logic_vector(C_cmd_size+C_data_size-1 downto 0) := (others => '0');
 signal clk_cnt          : integer range 0 to C_clk_div := 0;
 signal total_size       : integer range 0 to C_cmd_size+C_data_size := C_cmd_size+C_data_size;
 signal spi_clk_state    : std_logic := '0';
 signal spi_clk_cnt      : integer range 0 to total_size*2 := 0;
-signal i_clk_polarity : std_logic := '1';
-signal i_clk_phase    : std_logic := '1';
+signal i_clk_polarity   : std_logic := '1';
+signal i_clk_phase      : std_logic := '1';
 signal spi_send_reg     : std_logic_vector(total_size - 1 downto 0) := (others => '0');
 signal delay_cnt        : integer range 0 to C_delay := 0;
 
@@ -90,10 +92,16 @@ case r_current_state IS
     o_cs <= '0';
     clk_cnt <= 0;
     spi_clk_cnt <= 0;
-    cmd_to_send <= r_trigger_cmd&sample_size_cmd;
+    if i_cmd_sel = "00" then
+      cmd_to_send <= r_trigger_cmd&sample_size_cmd;
+    elsif i_cmd_sel = "01" then
+      cmd_to_send <= r_fun_gen_cmd&sample_size_cmd;
+    end if;
 
     if i_trigger = '0' then
       r_current_state <= SPI_PRE_TRANSFER;
+
+
     end if;
 --------------------------------------------------------------------------------
 -- on stm board data is being transfered long after CS activation

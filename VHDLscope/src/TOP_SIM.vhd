@@ -166,7 +166,7 @@ begin
 
     reset_n <= '0', '1' after 40 ns;
     trigger <= '0','1' after 100 ns;
-    enable_i2c <= '1','0' after 200 ns;
+    enable_i2c <= '1','0' after 20000 ns;
 
 end Behavioral;
 

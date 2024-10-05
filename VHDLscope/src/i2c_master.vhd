@@ -159,7 +159,8 @@ begin
 
 		end if;
 
-		when START =>
+	when START =>
+		if i_enable_i2c = '1' then
 		--pulling scl low after SDA low completes start condition
 
 			sda_state <= '0';
@@ -170,8 +171,13 @@ begin
 			-- wait for x ns then enable clock to have right start cond
 
 			clk_ena <= '1';
+		else 
+		-- no start condition was generated so no stop condition is needed
+			r_current_i2c_state <= IDLE; 
+		end if;
 
-		when ADRESS => 
+	when ADRESS => 
+		if i_enable_i2c = '1' then
 			sda_ena_n <= '0';
 			if data_cnt < C_data_length then
 				
@@ -203,8 +209,14 @@ begin
 				r_current_i2c_state <= SLV_ACK_1;
 				end if;
 			end if;
-		when SLV_ACK_1 =>
 
+		else 
+			r_current_i2c_state <= I2C_FINISH;
+		end if;
+
+
+	when SLV_ACK_1 =>
+		if i_enable_i2c = '1' then
 		-- if ack is ok, go to state described with R/W bit
 		-- ack is read in the middle of scl clock pulse
 			sda_ena_n <= '1';
@@ -234,12 +246,20 @@ begin
 						
 				end if;			
 
+		else 
+			r_current_i2c_state <= I2C_FINISH;
+		end if;
+
 
 		when I2C_READ =>
-
+		if i_enable_i2c = '1' then
 		-- Read EEPROM or Volitale memory
+		else 
+			r_current_i2c_state <= I2C_FINISH;
+		end if;
 
-		when I2C_WRITE =>
+	when I2C_WRITE =>
+		if i_enable_i2c = '1' then
 		sda_ena_n <= '0';
 		-- write data to DAC then wait for ack
 		if data_cnt <= C_data_length then
@@ -271,9 +291,12 @@ begin
 					r_current_i2c_state <= SLV_ACK_2;
 				end if;
 			end if;
+		else 
+			r_current_i2c_state <= I2C_FINISH;
+		end if;
 
-		when SLV_ACK_2 =>
-
+	when SLV_ACK_2 =>
+		if i_enable_i2c = '1' then
 		-- if OK go back to I2C_WRITE untill data stream isnt finished or some
 		-- other stop condition isnt met
 
@@ -306,8 +329,11 @@ begin
 					--end if;	
 				end if;	
 
+		else 
+			r_current_i2c_state <= I2C_FINISH;
+		end if;
 
-		when I2C_FINISH =>
+	when I2C_FINISH =>
 		sda_ena_n <= '0';
 		-- pull SCL high
 		-- wait for hold/setup time

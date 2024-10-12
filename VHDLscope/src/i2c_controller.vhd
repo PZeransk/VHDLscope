@@ -31,7 +31,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity i2c_controller is
 	port (
-		
+		i_clk : in std_logic
 	);
 end i2c_controller;
 

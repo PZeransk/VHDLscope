@@ -32,10 +32,7 @@ GENERIC(
 PORT(
 	i_clk			  :	in 	std_logic;
 	i_reset_n		:	in 	std_logic;
-	i_cs 			  :	in 	std_logic;
-  i_spi_clk   : in  std_logic;
 	i_enable		:	in 	std_logic;
-  i_miso_stm    :   in  std_logic;
 --	i_clk_polarity	:	in  std_logic;
 --	i_clk_phase		:	in 	std_logic;
 	i_miso_0		:	in 	std_logic;
@@ -54,7 +51,6 @@ end spi_master;
 architecture Behavioral of spi_master is
 
     type T_spi_states is (IDLE_SPI,
-        RECEIVE_CMD,
         TRANSFER);
 
 SIGNAL r_current_state 	: T_spi_states 	:= IDLE_SPI;
@@ -76,7 +72,7 @@ SIGNAL spi_clk 			    : std_logic := '1';
 
 -- receive signals
 SIGNAL rx_cmd           : std_logic_vector(C_cmd_size - 1 downto 0)  := (others => '0');
-SIGNAL sample_cmd       : std_logic_vector(C_data_size - 1 downto 0) := (others => '0');
+SIGNAL sample_cmd       : std_logic_vector(C_data_size - 1 downto 0) := "0000000000001000";
 SIGNAL sample_cnt       : integer range 0 to 65535 := 0;
 SIGNAL sample_max       : integer range 0 to 65535 := 0; -- max amount of samples from sample_cmd vector
 SIGNAL rx_data          : std_logic_vector(C_cmd_size + C_data_size - 1 downto 0) := (others => '1');
@@ -117,11 +113,9 @@ o_cs <= '1';
 
 
 --CS state is inverted (active high instad of low) on STM32 it will be changed later
-IF i_cs = '1' then 
-  r_current_state <= RECEIVE_CMD;
-ELSIF rx_cmd = "00001000" and i_cs = '0' THEN 
+IF i_enable = '1' THEN 
 
-  sample_max <= to_integer(unsigned(sample_cmd));
+  sample_max <= to_integer(unsigned(sample_cmd)); -- currently used as a placeholder
   r_clk_state <= i_clk_polarity;
   clk_cnt_ratio <= 0;
   clk_cnt <= 0;
@@ -133,17 +127,7 @@ ELSE
   r_current_state <= IDLE_SPI;
 END IF;
 
---------------------------------------------------------------------------------
---RECEIVE COMMAND STATE
---------------------------------------------------------------------------------
-when RECEIVE_CMD =>
 
-
-if i_cs = '0' then
-  rx_cmd <= rx_data(rx_data'high downto rx_data'high - 7);
-  sample_cmd <= rx_data(rx_data'high-8 downto 0);
-  r_current_state <= IDLE_SPI;
-end if;
 --------------------------------------------------------------------------------
 --TRANSFER STATE - transfers data from adc to spi master
 --------------------------------------------------------------------------------
@@ -202,21 +186,6 @@ end process;
 
 -- Display command on LED
 o_led_dbg <= rx_cmd;
-
---------------------------------------------------------------------------------
---RECEIVE COMMAND PROCESS
---------------------------------------------------------------------------------
-receive_data : process(i_spi_clk,r_current_state) is
-begin
-  if r_current_state = RECEIVE_CMD then
-
-    if rising_edge(i_spi_clk) then 
-      rx_data <= rx_data(rx_data'high - 1 downto rx_data'low) & i_miso_stm;
-     -- w_miso_0 <= i_miso_stm; -- w_miso is only for debugging in simulation
-    end if;
-    
-  end if;
-end process; -- receive_data
 
 
 end Behavioral;

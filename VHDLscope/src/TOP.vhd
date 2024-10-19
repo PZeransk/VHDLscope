@@ -62,7 +62,7 @@ begin
 
 SPI_SLAVE_0: entity work.spi_slave
 port map(
-	i_clk			=>i_clk	,
+	i_clk			=>i_clk,
 	i_reset_n		=>i_reset_n,
 	i_cs            =>i_cs,
     i_spi_clk       =>i_spi_clk,
@@ -70,7 +70,7 @@ port map(
 	i_data_tx		=>data_tx_dummy,
 	o_data			=>master_rx_data,
 	o_miso			=>o_miso_stm,
-	o_data_rx_valid	=>data_valid
+	o_data_rx_ready	=>data_valid
 );
 
 SPI_MASTER_0: entity work.spi_master

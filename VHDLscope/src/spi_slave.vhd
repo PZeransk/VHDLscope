@@ -45,7 +45,7 @@ PORT(
 	
 	o_data			:	out std_logic_vector(C_data_length - 1 downto 0);-- data received from master
 	o_miso			: 	out std_logic;
-	o_data_rx_valid	: 	out std_logic -- rx data flag '1' when data was fully received
+	o_data_rx_ready	: 	out std_logic -- rx data flag '1' when data was fully received
 
 	);
 
@@ -63,6 +63,7 @@ architecture Behavioral of spi_slave is
 	signal slope_detected	: 	std_logic 	:= '0';
 	signal clk_probe		: 	std_logic_vector(1 downto 0) :="00"; -- 2 bit clk detector
 	signal rx_cnt			:	integer range 0 to C_data_length := 0;
+	
 begin
 
 
@@ -71,12 +72,12 @@ begin
 	if (i_reset_n = '0') then
 		slope_detected <='0';
 
-	elsif rising_edge(i_clk) then
+	elsif falling_edge(i_clk) then
 		clk_probe <= clk_probe(clk_probe'high -1 downto 0) & i_spi_clk;
 
 		if clk_probe = "01" then --"01" for rising edge "10" for falling edge
 			slope_detected <= '1';
-		else 
+		else
 			slope_detected <= '0';
 		end if;
 
@@ -84,29 +85,44 @@ begin
 end process; -- spi_clk_slope_detect
 
 
-main : process(i_spi_clk, i_reset_n) is
+main : process(i_clk, i_spi_clk, i_reset_n, i_cs, slope_detected) is
 begin
 	
 if i_reset_n = '0' then
 	r_slave_state	<= SLV_IDLE;
 	master_data   	<= (others => '0');
 	rx_cnt			<= 0;
-elsif rising_edge(i_clk) then -- 
+	o_data_rx_ready <= '0';
+elsif rising_edge(i_spi_clk) then --
+
 	case (r_slave_state) is
 
 		when SLV_IDLE =>
-			rx_cnt	<= 0;
+		o_data_rx_ready <= '0';
+			if i_cs = '0' then
+				rx_cnt	<= 0;
+				r_slave_state <= SLV_IDLE;
+			elsif i_cs = '1' then
+				rx_cnt	<= 0;
+				r_slave_state <= SLV_RECEIVE_DATA;
+			end if;
+
 		when SLV_RECEIVE_DATA =>
-
-	    	if slope_detected = '1' then
-	    		if rx_cnt < C_data_length then
-	    		master_data <= master_data(master_data'high-1 downto 0)&i_mosi;
-	    		rx_cnt <= rx_cnt + 1;
+		if i_cs = '1' then
+	    	
+	    		if rx_cnt < C_data_length -1 then
+	    			master_data <= master_data(master_data'high-1 downto 0)&i_mosi;
+	    			rx_cnt <= rx_cnt + 1;
+	    			o_data_rx_ready <= '0';
 	    		else
-	    		rx_cnt <= 0;
+	    			rx_cnt <= 0;
+	    			o_data_rx_ready <= '1';
 	    		end if;
-	    	end if;
-
+	    
+	    	r_slave_state <= SLV_RECEIVE_DATA;
+	    else
+	    	r_slave_state <= SLV_IDLE;
+	    end if;
 		when TRANSFER_DATA_TO_MASTER =>
 
 	end case;

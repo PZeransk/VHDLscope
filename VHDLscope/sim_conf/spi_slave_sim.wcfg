@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/home/ise/ISE_VM/VHDLscope/VHDLscope/TOP_SIM_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+            <top_module name="top_sim" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="12" />
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/i_clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_clk</obj_property>
+      <obj_property name="ObjectShortName">i_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/i_reset_n" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_reset_n</obj_property>
+      <obj_property name="ObjectShortName">i_reset_n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/i_cs" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_cs</obj_property>
+      <obj_property name="ObjectShortName">i_cs</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/i_spi_clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_spi_clk</obj_property>
+      <obj_property name="ObjectShortName">i_spi_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/i_mosi" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_mosi</obj_property>
+      <obj_property name="ObjectShortName">i_mosi</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/o_miso" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">o_miso</obj_property>
+      <obj_property name="ObjectShortName">o_miso</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/master_data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">master_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">master_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/r_slave_state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">r_slave_state</obj_property>
+      <obj_property name="ObjectShortName">r_slave_state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/slope_detected" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">slope_detected</obj_property>
+      <obj_property name="ObjectShortName">slope_detected</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/clk_probe" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">clk_probe[1:0]</obj_property>
+      <obj_property name="ObjectShortName">clk_probe[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/rx_cnt" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">rx_cnt</obj_property>
+      <obj_property name="ObjectShortName">rx_cnt</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/o_data_rx_ready" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">o_data_rx_ready</obj_property>
+      <obj_property name="ObjectShortName">o_data_rx_ready</obj_property>
+   </wvobject>
+</wave_config>

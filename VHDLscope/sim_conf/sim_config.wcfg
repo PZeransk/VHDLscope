@@ -11,7 +11,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="29" />
+   <WVObjectSize size="31" />
    <wvobject fp_name="/top_sim/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -127,5 +127,13 @@
    <wvobject fp_name="/top_sim/TOP_ENT/I2C_MASTER_0/r_addr_a0" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">r_addr_a0[6:0]</obj_property>
       <obj_property name="ObjectShortName">r_addr_a0[6:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/o_miso" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">o_miso</obj_property>
+      <obj_property name="ObjectShortName">o_miso</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/i_mosi" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_mosi</obj_property>
+      <obj_property name="ObjectShortName">i_mosi</obj_property>
    </wvobject>
 </wave_config>

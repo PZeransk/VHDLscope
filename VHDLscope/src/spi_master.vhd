@@ -82,7 +82,7 @@ begin
 --o_cs <= cs;
 o_spi_clk <= r_clk_state;
 
-process(i_clk, i_reset_n, i_spi_clk, i_cs)
+process(i_clk, i_reset_n)
 begin 
 -- was =1
 

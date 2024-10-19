@@ -20,7 +20,7 @@ entity TOP is
         i_cs 			:	in 	std_logic;
         i_spi_clk 		: 	in  std_logic;
         i_enable		:	in 	std_logic;
-        i_miso_stm		: 	in  std_logic;
+        i_mosi_stm		: 	in  std_logic;
     --	i_clk_polarity	:	in  std_logic;
     --	i_clk_phase		:	in 	std_logic;
         i_miso_0		:	in 	std_logic;
@@ -29,6 +29,8 @@ entity TOP is
         o_cs			:	out std_logic;
         o_spi_clk		:	out std_logic;
         o_mosi_0		:	out	std_logic;
+        o_miso_stm		:	out std_logic;
+
        -- o_rx_data_0		:	out std_logic_vector(C_data_length - 1 downto 0);
        -- o_rx_data_1		:	out std_logic_vector(C_data_length - 1 downto 0)
     -- I2C signal
@@ -53,7 +55,23 @@ architecture Behavioral of TOP is
 signal r_rx_data_0 	: std_logic_vector(C_data_length - 1 downto 0) := (others => '0');
 signal r_rx_data_1 	: std_logic_vector(C_data_length - 1 downto 0) := (others => '0');
 signal ack_err 		: std_logic:='0';
+signal data_tx_dummy	: std_logic_vector(7 downto 0) := "11111111";
+signal master_rx_data	: std_logic_vector(7 downto 0) :=(others => '0');
+signal data_valid 		: std_logic :='0';
 begin
+
+SPI_SLAVE_0: entity work.spi_slave
+port map(
+	i_clk			=>i_clk	,
+	i_reset_n		=>i_reset_n,
+	i_cs            =>i_cs,
+    i_spi_clk       =>i_spi_clk,
+    i_mosi			=>i_mosi_stm,
+	i_data_tx		=>data_tx_dummy,
+	o_data			=>master_rx_data,
+	o_miso			=>o_miso_stm,
+	o_data_rx_valid	=>data_valid
+);
 
 SPI_MASTER_0: entity work.spi_master
 generic map(
@@ -63,10 +81,7 @@ generic map(
 port map(
 	i_clk			=>i_clk	,
 	i_reset_n		=>i_reset_n,
-	i_cs            =>i_cs,
-    i_spi_clk       =>i_spi_clk,
 	i_enable		=>i_enable,
-	i_miso_stm		=>i_miso_stm,
 	i_miso_0		=>i_miso_0,
 	i_miso_1		=>i_miso_1,
 

@@ -113,13 +113,14 @@ begin
         i_cs            =>stm_cs,
         i_spi_clk       =>stm_spi_clk,
         i_enable		=>enable,
-        i_miso_stm      =>stm_mosi,
+        i_mosi_stm      =>stm_mosi,
         i_miso_0		=>miso_0,
         i_miso_1		=>miso_1,
     
         o_cs			=>cs,
         o_spi_clk		=>o_spi_clk,
         o_mosi_0		=>o_mosi_0,
+        o_miso_stm      =>stm_miso,
         --o_rx_data_0		=>o_rx_data_0,
         --o_rx_data_1		=>o_rx_data_1
         i_enable_i2c    =>enable_i2c,

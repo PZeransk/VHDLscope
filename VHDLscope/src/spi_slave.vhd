@@ -90,35 +90,25 @@ begin
 	
 if i_reset_n = '0' then
 	r_slave_state	<= SLV_IDLE;
-	master_data   	<= (others => '0');
-	rx_cnt			<= 0;
-	o_data_rx_ready <= '0';
-elsif rising_edge(i_spi_clk) then --
+	--master_data   	<= (others => '0');
+
+	--o_data_rx_ready <= '0';
+elsif rising_edge(i_clk) then --
 
 	case (r_slave_state) is
 
 		when SLV_IDLE =>
-		o_data_rx_ready <= '0';
+		--o_data_rx_ready <= '0';
 			if i_cs = '0' then
-				rx_cnt	<= 0;
+				--rx_cnt	<= 0;
 				r_slave_state <= SLV_IDLE;
 			elsif i_cs = '1' then
-				rx_cnt	<= 0;
+				--rx_cnt	<= 0;
 				r_slave_state <= SLV_RECEIVE_DATA;
 			end if;
 
 		when SLV_RECEIVE_DATA =>
-		if i_cs = '1' then
-	    	
-	    		if rx_cnt < C_data_length -1 then
-	    			master_data <= master_data(master_data'high-1 downto 0)&i_mosi;
-	    			rx_cnt <= rx_cnt + 1;
-	    			o_data_rx_ready <= '0';
-	    		else
-	    			rx_cnt <= 0;
-	    			o_data_rx_ready <= '1';
-	    		end if;
-	    
+		if i_cs = '1' then    
 	    	r_slave_state <= SLV_RECEIVE_DATA;
 	    else
 	    	r_slave_state <= SLV_IDLE;
@@ -130,6 +120,53 @@ end if;
 
 end process; -- main
 
+
+
+--------------------------------------------------------------------------------
+--RECEIVE DATA PROCESS
+--------------------------------------------------------------------------------
+receive_data : process(i_spi_clk,r_slave_state,i_mosi) is
+begin
+  if r_slave_state = SLV_RECEIVE_DATA then
+  	if rising_edge(i_spi_clk) then
+
+	   if rx_cnt < C_data_length  then
+	   	master_data <= master_data(master_data'high-1 downto 0)&i_mosi;
+	   	rx_cnt <= rx_cnt + 1;
+	   	--o_data_rx_ready <= '0';
+
+	   else
+	   	master_data <= master_data(master_data'high-1 downto 0)&i_mosi;
+
+	   	rx_cnt <= 1; -- because when starting from 0 data had 9bit length
+	   end if;
+
+    end if;
+  else 
+  	--o_data_rx_ready <= '0';
+	rx_cnt <= 0;
+  end if;
+end process; -- receive_data
+
+--------------------------------------------------------------------------------
+-- data ready process
+--------------------------------------------------------------------------------
+ready_flag : process(i_spi_clk,r_slave_state) is
+begin
+  if r_slave_state = SLV_RECEIVE_DATA then
+  	if falling_edge(i_spi_clk) then
+  		if rx_cnt = C_data_length then
+  		o_data <= master_data;
+  		o_data_rx_ready <= '1';
+  		else
+  		o_data_rx_ready <= '0';
+  		end if;
+    end if;
+  else 
+  	--o_data_rx_ready <= '0';
+	o_data_rx_ready <= '0';
+  end if;
+end process; -- ready_flag
 
 end Behavioral;
 

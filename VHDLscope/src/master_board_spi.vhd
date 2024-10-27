@@ -32,7 +32,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity master_board_spi is
     generic (
         C_delay      : integer := 100;
-        C_clk_div    : integer := 2;
+        C_clk_div    : integer := 6; -- is around 8 MHz with 50 MHz input clk
         C_cmd_size   : integer := 8;
         C_data_size  : integer := 16 -- because stm32mp157 can send only multiplied 8 bit word size
     );

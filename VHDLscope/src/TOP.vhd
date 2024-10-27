@@ -61,6 +61,11 @@ signal data_valid 		: std_logic :='0';
 begin
 
 SPI_SLAVE_0: entity work.spi_slave
+generic map(
+	C_data_length	=>8,
+  	C_cmd_size   	=>8,
+  	C_data_size  	=>16
+)
 port map(
 	i_clk			=>i_clk,
 	i_reset_n		=>i_reset_n,

@@ -87,7 +87,7 @@ begin
 
     STM32_SIM : entity work.master_board_spi
     generic map (
-        C_clk_div   => 2,
+        C_clk_div   => 6,
         C_cmd_size  => 8,
         C_data_size => 16
     )

@@ -58,6 +58,8 @@ signal ack_err 		: std_logic:='0';
 signal data_tx_dummy	: std_logic_vector(7 downto 0) := "11111111";
 signal master_rx_data	: std_logic_vector(7 downto 0) :=(others => '0');
 signal data_valid 		: std_logic :='0';
+signal int_data 	: std_logic_vector(15 downto 0)	:=(others =>'0');
+signal int_cmd   	: std_logic_vector(7 downto 0)	:=(others =>'0');
 begin
 
 SPI_SLAVE_0: entity work.spi_slave
@@ -77,6 +79,23 @@ port map(
 	o_miso			=>o_miso_stm,
 	o_data_rx_ready	=>data_valid
 );
+
+SPI_SLAVE_CONTROLLER: entity work.slave_controller 
+generic map(
+	C_data_length	=>8,
+  	C_cmd_size   	=>8,
+  	C_data_size  	=>16
+	)
+port map(
+	i_clk				=> i_clk,
+	i_reset_n			=> i_reset_n,
+	i_rx_data 			=> master_rx_data,
+	i_rx_data_ready 	=> data_valid,
+	i_data_cnt_reset	=> '0',
+	o_cmd 				=> int_cmd,
+	o_data				=> int_data
+
+	);
 
 SPI_MASTER_0: entity work.spi_master
 generic map(

@@ -3,7 +3,7 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="/home/ise/ISE_VM/VHDLscope/VHDLscope/TOP_SIM_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="/home/pzdr/Projects/VHDL/VHDLscope/VHDLscope/TOP_SIM_isim_beh.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="numeric_std" />
             <top_module name="std_logic_1164" />
@@ -11,7 +11,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="13" />
+   <WVObjectSize size="14" />
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/i_clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">i_clk</obj_property>
       <obj_property name="ObjectShortName">i_clk</obj_property>
@@ -63,5 +63,9 @@
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_0/o_data" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">o_data[7:0]</obj_property>
       <obj_property name="ObjectShortName">o_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_CONTROLLER/rx_data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rx_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rx_data[7:0]</obj_property>
    </wvobject>
 </wave_config>

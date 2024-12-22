@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/home/pzdr/Projects/VHDL/VHDLscope/VHDLscope/TOP_SIM_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+            <top_module name="top_sim" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="26" />
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/i_clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_clk</obj_property>
+      <obj_property name="ObjectShortName">i_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/i_reset_n" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_reset_n</obj_property>
+      <obj_property name="ObjectShortName">i_reset_n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/i_enable" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_enable</obj_property>
+      <obj_property name="ObjectShortName">i_enable</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/i_params" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">i_params[15:0]</obj_property>
+      <obj_property name="ObjectShortName">i_params[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/i_miso_0" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_miso_0</obj_property>
+      <obj_property name="ObjectShortName">i_miso_0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/i_miso_1" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_miso_1</obj_property>
+      <obj_property name="ObjectShortName">i_miso_1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_busy" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">o_busy</obj_property>
+      <obj_property name="ObjectShortName">o_busy</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_cs" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">o_cs</obj_property>
+      <obj_property name="ObjectShortName">o_cs</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_spi_clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">o_spi_clk</obj_property>
+      <obj_property name="ObjectShortName">o_spi_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_mosi_0" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">o_mosi_0</obj_property>
+      <obj_property name="ObjectShortName">o_mosi_0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_rx_data_1" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">o_rx_data_1[11:0]</obj_property>
+      <obj_property name="ObjectShortName">o_rx_data_1[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/r_current_state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">r_current_state</obj_property>
+      <obj_property name="ObjectShortName">r_current_state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/clk_cnt" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">clk_cnt</obj_property>
+      <obj_property name="ObjectShortName">clk_cnt</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/clk_cnt_ratio" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">clk_cnt_ratio</obj_property>
+      <obj_property name="ObjectShortName">clk_cnt_ratio</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/cs" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">cs</obj_property>
+      <obj_property name="ObjectShortName">cs</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/spi_clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">spi_clk</obj_property>
+      <obj_property name="ObjectShortName">spi_clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/clk_ratio" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">clk_ratio</obj_property>
+      <obj_property name="ObjectShortName">clk_ratio</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/rx_cmd" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rx_cmd[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rx_cmd[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/sample_cmd" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">sample_cmd[15:0]</obj_property>
+      <obj_property name="ObjectShortName">sample_cmd[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/sample_cnt" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">sample_cnt</obj_property>
+      <obj_property name="ObjectShortName">sample_cnt</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/sample_max" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">sample_max</obj_property>
+      <obj_property name="ObjectShortName">sample_max</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/rx_data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rx_data[23:0]</obj_property>
+      <obj_property name="ObjectShortName">rx_data[23:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/c_clk_ratio" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">c_clk_ratio</obj_property>
+      <obj_property name="ObjectShortName">c_clk_ratio</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/c_data_length" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">c_data_length</obj_property>
+      <obj_property name="ObjectShortName">c_data_length</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/c_cmd_size" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">c_cmd_size</obj_property>
+      <obj_property name="ObjectShortName">c_cmd_size</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/c_data_size" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">c_data_size</obj_property>
+      <obj_property name="ObjectShortName">c_data_size</obj_property>
+   </wvobject>
+</wave_config>

@@ -95,7 +95,7 @@ begin
         o_mosi      =>stm_mosi,
         o_cs        =>stm_cs,
         o_spi_clk   =>stm_spi_clk,
-        i_cmd_sel   =>"01",
+        i_cmd_sel   =>"00",
         i_miso      =>stm_miso,
         i_clk       =>clk,
         i_trigger   =>trigger,

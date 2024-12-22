@@ -58,8 +58,11 @@ signal ack_err 		: std_logic:='0';
 signal data_tx_dummy	: std_logic_vector(7 downto 0) := "11111111";
 signal master_rx_data	: std_logic_vector(7 downto 0) :=(others => '0');
 signal data_valid 		: std_logic :='0';
-signal int_data 	: std_logic_vector(15 downto 0)	:=(others =>'0');
+signal int_data_trig 	: std_logic_vector(15 downto 0)	:=(others =>'0');
 signal int_cmd   	: std_logic_vector(7 downto 0)	:=(others =>'0');
+signal finish_flag  : std_logic := '0';
+signal spi_enable	: std_logic := '0';
+signal spi_busy		: std_logic := '0';
 begin
 
 SPI_SLAVE_0: entity work.spi_slave
@@ -75,6 +78,7 @@ port map(
     i_spi_clk       =>i_spi_clk,
     i_mosi			=>i_mosi_stm,
 	i_data_tx		=>data_tx_dummy,
+	o_finish_flag   =>finish_flag,
 	o_data			=>master_rx_data,
 	o_miso			=>o_miso_stm,
 	o_data_rx_ready	=>data_valid
@@ -92,8 +96,11 @@ port map(
 	i_rx_data 			=> master_rx_data,
 	i_rx_data_ready 	=> data_valid,
 	i_data_cnt_reset	=> '0',
+	i_finish			=> finish_flag,
+	i_master_busy 		=> spi_busy,
+	o_en_trigger		=> spi_enable,
 	o_cmd 				=> int_cmd,
-	o_data				=> int_data
+	o_data_trig			=> int_data_trig
 
 	);
 
@@ -105,10 +112,12 @@ generic map(
 port map(
 	i_clk			=>i_clk	,
 	i_reset_n		=>i_reset_n,
-	i_enable		=>i_enable,
+	i_enable		=>spi_enable,
+	i_params		=>int_data_trig,
 	i_miso_0		=>i_miso_0,
 	i_miso_1		=>i_miso_1,
 
+	o_busy			=>spi_busy,
 	o_cs			=>o_cs	,
 	o_spi_clk		=>o_spi_clk,
 	o_mosi_0		=>o_mosi_0,

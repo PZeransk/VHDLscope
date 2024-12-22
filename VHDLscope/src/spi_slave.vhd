@@ -43,6 +43,7 @@ PORT(
 	i_mosi			:	in 	std_logic; -- data from master	
 	i_data_tx		: 	in 	std_logic_vector(C_data_length - 1 downto 0); -- data to send to master
 	
+	o_finish_flag	:   out std_logic;
 	o_data			:	out std_logic_vector(C_data_length - 1 downto 0);-- data received from master
 	o_miso			: 	out std_logic;
 	o_data_rx_ready	: 	out std_logic -- rx data flag '1' when data was fully received
@@ -102,8 +103,10 @@ elsif rising_edge(i_clk) then --
 			if i_cs = '0' then
 				--rx_cnt	<= 0;
 				r_slave_state <= SLV_IDLE;
+				o_finish_flag <= '1';
 			elsif i_cs = '1' then
 				--rx_cnt	<= 0;
+				o_finish_flag <= '0';
 				r_slave_state <= SLV_RECEIVE_DATA;
 			end if;
 
@@ -113,6 +116,7 @@ elsif rising_edge(i_clk) then --
 	    else
 	    	r_slave_state <= SLV_IDLE;
 	    end if;
+
 		when TRANSFER_DATA_TO_MASTER =>
 
 	end case;

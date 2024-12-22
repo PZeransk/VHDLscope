@@ -56,9 +56,11 @@ type T_spi_states is (
   SPI_POST_TRANSFER
   );
 
+constant r_trigger_cmd    : std_logic_vector(C_cmd_size-1 downto 0)  := "00001000";
+constant r_fun_gen_cmd    : std_logic_vector(C_cmd_size-1 downto 0)  := "00001001";
+
 signal r_current_state  : T_spi_states  := SPI_IDLE;
-signal r_trigger_cmd    : std_logic_vector(C_cmd_size-1 downto 0)  := "00001000";
-signal r_fun_gen_cmd    : std_logic_vector(C_cmd_size-1 downto 0)  := "00001001";
+
 signal sample_size_cmd  : std_logic_vector(C_data_size-1 downto 0) := "0000000000000100";
 signal cmd_to_send      : std_logic_vector(C_cmd_size+C_data_size-1 downto 0) := (others => '0');
 signal clk_cnt          : integer range 0 to C_clk_div := 0;

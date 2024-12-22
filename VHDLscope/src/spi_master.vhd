@@ -33,11 +33,13 @@ PORT(
 	i_clk			  :	in 	std_logic;
 	i_reset_n		:	in 	std_logic;
 	i_enable		:	in 	std_logic;
+  i_params    : in  std_logic_vector(C_data_size - 1 downto 0);
 --	i_clk_polarity	:	in  std_logic;
 --	i_clk_phase		:	in 	std_logic;
 	i_miso_0		:	in 	std_logic;
 	i_miso_1		:	in 	std_logic;
 	--i_address		:	in 	std_logic_vector(C_data_length downto 0);
+  o_busy      : out std_logic;
 	o_cs			:	out std_logic;
 	o_spi_clk		:	out std_logic;
 	o_mosi_0		:	out	std_logic;
@@ -70,6 +72,8 @@ SIGNAL w_miso_1 		    : std_logic;
 SIGNAL cs 				      : std_logic := '1';
 SIGNAL spi_clk 			    : std_logic := '1';
 
+SIGNAL clk_ratio    : integer range 0 to 1000 := C_clk_ratio;
+
 -- receive signals
 SIGNAL rx_cmd           : std_logic_vector(C_cmd_size - 1 downto 0)  := (others => '0');
 SIGNAL sample_cmd       : std_logic_vector(C_data_size - 1 downto 0) := "0000000000001000";
@@ -94,6 +98,7 @@ o_rx_data_1 <= (others => '0');
 clk_cnt_ratio <= 0;
 r_current_state <= IDLE_SPI;
 clk_cnt <= 0;
+o_busy <= '0';
 ELSIF(rising_edge(i_clk)) then
 
 
@@ -114,16 +119,21 @@ o_cs <= '1';
 
 --CS state is inverted (active high instad of low) on STM32 it will be changed later
 IF i_enable = '1' THEN 
-
-  sample_max <= to_integer(unsigned(sample_cmd)); -- currently used as a placeholder
+  -- i_params is split for clk divider and samples count
+  sample_max <= to_integer(unsigned(i_params(C_data_size - 7 downto 0)));
   r_clk_state <= i_clk_polarity;
+  clk_ratio <= to_integer(unsigned(i_params(C_data_size - 1 downto C_data_size - 6)));
+  clk_ratio <= clk_ratio + 1; -- to avoid dividing with zero
+
   clk_cnt_ratio <= 0;
   clk_cnt <= 0;
   sample_cnt <= 0;
   o_cs <= '0';
+  o_busy <= '1';
   --o_spi_clk <= r_clk_state;
   r_current_state <= TRANSFER;
 ELSE
+  o_busy <= '0';
   r_current_state <= IDLE_SPI;
 END IF;
 
@@ -174,6 +184,7 @@ else
   -- something on debug LEDs
 
   rx_cmd <= (others => '0');
+  o_busy <= '0';
   r_current_state <= IDLE_SPI;
 end if;
 

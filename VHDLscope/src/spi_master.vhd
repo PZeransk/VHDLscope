@@ -53,7 +53,8 @@ end spi_master;
 architecture Behavioral of spi_master is
 
     type T_spi_states is (IDLE_SPI,
-        TRANSFER);
+        TRANSFER,
+        FINISHED);
 
 SIGNAL r_current_state 	: T_spi_states 	:= IDLE_SPI;
 SIGNAL r_cs_state		    : std_logic;
@@ -185,9 +186,18 @@ else
 
   rx_cmd <= (others => '0');
   o_busy <= '0';
-  r_current_state <= IDLE_SPI;
+  r_current_state <= FINISHED;
 end if;
 
+when FINISHED =>
+
+  o_busy <= '0';
+
+  if(i_enable = '0') then
+    r_current_state <= IDLE_SPI;
+  else
+    r_current_state <= FINISHED;
+  end if;
 END CASE;
 
 end if;

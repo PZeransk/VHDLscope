@@ -45,12 +45,28 @@ entity TOP is
 
        --debug LED output
         --o_led 			: 	out std_logic
+        o_DCM_clk		: out std_logic;
         o_led_dbg 		: out std_logic_vector(7 downto 0)
         );
 end TOP;
 
 
 architecture Behavioral of TOP is
+
+-- VHDL Instantiation Created from source file CLK.vhd -- 22:43:40 12/29/2024
+	COMPONENT CLK
+	PORT(
+		CLKIN_IN : IN std_logic;
+		RST_IN : IN std_logic;          
+		CLKFX_OUT : OUT std_logic;
+		CLKIN_IBUFG_OUT : OUT std_logic;
+		CLK0_OUT : OUT std_logic;
+		CLK0_OUT1 : OUT std_logic;
+		LOCKED_OUT : OUT std_logic;
+		STATUS_OUT : OUT std_logic_vector(7 downto 0)
+		);
+	END COMPONENT;
+
 
 signal r_rx_data_0 	: std_logic_vector(C_data_length - 1 downto 0) := (others => '0');
 signal r_rx_data_1 	: std_logic_vector(C_data_length - 1 downto 0) := (others => '0');
@@ -63,7 +79,50 @@ signal int_cmd   	: std_logic_vector(7 downto 0)	:=(others =>'0');
 signal finish_flag  : std_logic := '0';
 signal spi_enable	: std_logic := '0';
 signal spi_busy		: std_logic := '0';
+signal DCM_clk_60	: std_logic := '0';
+signal DCM_locked	: std_logic := '0';
+signal DCM_status	: std_logic_vector(7 downto 0) := (others => '0');
+signal DDR_DCM_clk	: std_logic := '0';
+signal DCM_clk0_out	: std_logic := '0';
+signal DCM_clk0_out1	: std_logic := '0';
+signal reset 		: std_logic := '0';
+signal init_reset_cnt	: integer range 0 to 3 :=0;
 begin
+
+
+--reset <= NOT i_reset_n;
+o_DCM_clk <= DCM_clk_60;
+
+-- DCM must have reset state active for at least 3 i_clk cycles
+init_DCM_by_reset : process( i_clk, i_reset_n )
+begin
+	if (i_reset_n = '0') then
+		init_reset_cnt <= 0;
+		
+	else
+		if (rising_edge(i_clk) AND init_reset_cnt < 3) then
+		reset <= '1';
+		init_reset_cnt <= init_reset_cnt + 1;
+		elsif(init_reset_cnt >= 3) then
+
+		reset <= NOT i_reset_n;
+
+		end if;
+	end if;
+end process ; -- init_reset
+
+-- DCM instance
+Inst_CLK: CLK 
+PORT MAP(
+		CLKIN_IN => i_clk,
+		RST_IN => reset,
+		CLKFX_OUT => DCM_clk_60,
+		CLKIN_IBUFG_OUT => open,
+		CLK0_OUT => DCM_clk0_out,
+		CLK0_OUT1 => DCM_clk0_out1,
+		LOCKED_OUT => DCM_locked,
+		STATUS_OUT => DCM_status
+	);
 
 SPI_SLAVE_0: entity work.spi_slave
 generic map(
@@ -72,7 +131,7 @@ generic map(
   	C_data_size  	=>16
 )
 port map(
-	i_clk			=>i_clk,
+	i_clk			=>DCM_clk_60,
 	i_reset_n		=>i_reset_n,
 	i_cs            =>i_cs,
     i_spi_clk       =>i_spi_clk,
@@ -91,7 +150,7 @@ generic map(
   	C_data_size  	=>16
 	)
 port map(
-	i_clk				=> i_clk,
+	i_clk				=> DCM_clk_60,
 	i_reset_n			=> i_reset_n,
 	i_rx_data 			=> master_rx_data,
 	i_rx_data_ready 	=> data_valid,
@@ -110,7 +169,7 @@ generic map(
 	C_data_length	=> C_data_length
 )
 port map(
-	i_clk			=>i_clk	,
+	i_clk			=>DCM_clk_60	,
 	i_reset_n		=>i_reset_n,
 	i_enable		=>spi_enable,
 	i_params		=>int_data_trig,
@@ -134,7 +193,7 @@ generic map (
 	C_i2c_scl_speed => 400000
 )
 port map (
-	i_clk 			=>i_clk,
+	i_clk 			=>DCM_clk_60,
 	i_reset_n 		=>i_reset_n,
 	i_enable_i2c	=>i_enable_i2c,
 	i_addr_i2c 		=>i_addr_i2c,

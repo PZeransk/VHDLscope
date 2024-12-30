@@ -38,7 +38,7 @@ end TOP_SIM;
 
 architecture Behavioral of TOP_SIM is
 -- timings constants
-    constant clk_time       : time := 10 ns;
+    constant clk_time       : time := 41.667 ns;
     constant cs_h           : time := 30 ns;
     constant cs_l           : time := 300 ns;
 --TOP SIGNALS
@@ -132,6 +132,7 @@ begin
         io_scl          =>scl,
         io_sda          =>sda,
 
+        o_DCM_clk       =>open,
         o_led_dbg       =>led_dbg
     );
 
@@ -165,8 +166,8 @@ begin
         wait for clk_time;
     end process;
 
-    reset_n <= '0', '1' after 40 ns;
-    trigger <= '0','1' after 100 ns;
+    reset_n <= '0', '1' after 100 ns;
+    trigger <= '0','1' after 300 ns;
     enable_i2c <= '1','0' after 20000 ns;
 
 end Behavioral;

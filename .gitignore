@@ -15,6 +15,7 @@ VHDLscope/isim
 *.debug
 *.lso
 *.tcl
+*.txt
 VHDLscope/planAhead*
 local/*
 .clangd

@@ -107,7 +107,7 @@ signal DCM_clk0_out1	: std_logic := '0';
 signal reset 		: std_logic := '0';
 signal init_reset_cnt	: integer range 0 to 3 :=0;
 
-
+signal dummy_sig0	: std_logic := '0';
 
 signal ena 		: std_logic := '0';
 signal wea		: std_logic_vector(0 downto 0) := (others => '0');
@@ -134,14 +134,19 @@ begin
 		init_reset_cnt <= 0;
 		
 	else
-		if (rising_edge(i_clk) AND init_reset_cnt < 3) then
-		reset <= '1';
-		init_reset_cnt <= init_reset_cnt + 1;
-		elsif(init_reset_cnt >= 3) then
 
-		reset <= NOT i_reset_n;
+		if (rising_edge(i_clk) AND init_reset_cnt < 3) then
+
+		init_reset_cnt <= init_reset_cnt + 1;
 
 		end if;
+
+		if(init_reset_cnt >= 3) then
+			reset <= NOT i_reset_n;
+		else
+			reset <= '1';
+		end if;
+
 	end if;
 end process ; -- init_reset
 
@@ -151,7 +156,7 @@ PORT MAP(
 		CLKIN_IN => i_clk,
 		RST_IN => reset,
 		CLKFX_OUT => DCM_clk_60,
-		CLKIN_IBUFG_OUT => open,
+		CLKIN_IBUFG_OUT => dummy_sig0,
 		CLK0_OUT => DCM_clk0_out,
 		CLK0_OUT1 => DCM_clk0_out1,
 		LOCKED_OUT => DCM_locked,

@@ -46,7 +46,7 @@ PORT(
 	
 	i_master_busy 	: 	in std_logic;
 
-	o_data_ok 		:   out std_logic;
+	--o_data_ok 		:   out std_logic;
 	o_en_trigger	:	out std_logic;
 	o_cmd 			: 	out std_logic_vector(C_cmd_size - 1 downto 0);
 	o_data_trig		:	out std_logic_vector(2*C_data_length - 1 downto 0)-- data received from master

@@ -52,9 +52,9 @@ begin
       port map (I=>CLKFX_OBUF,
                 O=>CLKFX_OUT);
    
-   CLKIN_IBUFG_INST : IBUFG
-      port map (I=>CLKIN_IN,
-                O=>CLKIN_IBUFG);
+   --CLKIN_IBUFG_INST : IBUFG
+     -- port map (I=>CLKIN_IN,
+      --          O=>CLKIN_IBUFG);
    
    CLK0_BUFG_INST : BUFG
       port map (I=>CLK0_BUF,
@@ -80,7 +80,7 @@ begin
             PHASE_SHIFT => 0,
             STARTUP_WAIT => FALSE)
       port map (CLKFB=>CLKFB_IN,
-                CLKIN=>CLKIN_IBUFG,
+                CLKIN=>CLKIN_IN,
                 DSSEN=>GND_BIT,
                 PSCLK=>GND_BIT,
                 PSEN=>GND_BIT,

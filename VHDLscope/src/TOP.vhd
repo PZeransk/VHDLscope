@@ -66,6 +66,25 @@ architecture Behavioral of TOP is
 		STATUS_OUT : OUT std_logic_vector(7 downto 0)
 		);
 	END COMPONENT;
+-- Memory component generated with IP core
+COMPONENT adc_mem
+  PORT (
+    clka : IN STD_LOGIC;
+    rsta : IN STD_LOGIC;
+    ena : IN STD_LOGIC;
+    wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
+    addra : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
+    dina : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
+    douta : OUT STD_LOGIC_VECTOR(9 DOWNTO 0);
+    clkb : IN STD_LOGIC;
+    rstb : IN STD_LOGIC;
+    enb : IN STD_LOGIC;
+    web : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
+    addrb : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
+    dinb : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
+    doutb : OUT STD_LOGIC_VECTOR(9 DOWNTO 0)
+  );
+END COMPONENT;
 
 
 signal r_rx_data_0 	: std_logic_vector(C_data_length - 1 downto 0) := (others => '0');
@@ -87,6 +106,21 @@ signal DCM_clk0_out	: std_logic := '0';
 signal DCM_clk0_out1	: std_logic := '0';
 signal reset 		: std_logic := '0';
 signal init_reset_cnt	: integer range 0 to 3 :=0;
+
+
+
+signal ena 		: std_logic := '0';
+signal wea		: std_logic_vector(0 downto 0) := (others => '0');
+signal addra	: std_logic_vector(9 downto 0) := (others => '0');
+signal dina		: std_logic_vector(9 downto 0) := (others => '0');
+signal douta	: std_logic_vector(9 downto 0) := (others => '0');
+signal enb 		: std_logic := '0';
+signal web 		: std_logic_vector(0 downto 0) := (others => '0');
+signal addrb	: std_logic_vector(9 downto 0) := (others => '0');
+signal dinb 	: std_logic_vector(9 downto 0) := (others => '0');
+signal doutb 	: std_logic_vector(9 downto 0) := (others => '0');
+
+
 begin
 
 
@@ -169,7 +203,7 @@ generic map(
 	C_data_length	=> C_data_length
 )
 port map(
-	i_clk			=>DCM_clk_60	,
+	i_clk			=>DCM_clk_60,
 	i_reset_n		=>i_reset_n,
 	i_enable		=>spi_enable,
 	i_params		=>int_data_trig,
@@ -184,6 +218,24 @@ port map(
 	o_rx_data_1		=>r_rx_data_1,
 	o_led_dbg 		=>o_led_dbg
 );
+
+ADC_MEMORY: adc_mem
+  PORT MAP (
+    clka 	=> DCM_clk_60,
+    rsta 	=> i_reset_n,
+    ena 	=> ena,
+    wea 	=> wea,
+    addra 	=> addra,
+    dina 	=> dina,
+    douta 	=> douta,
+    clkb 	=> DCM_clk_60,
+    rstb 	=> i_reset_n,
+    enb 	=> enb,
+    web 	=> web,
+    addrb 	=> addrb,
+    dinb 	=> dinb,
+    doutb 	=> doutb
+  );
 
 I2C_MASTER_0: entity work.i2c_master 
 generic map (

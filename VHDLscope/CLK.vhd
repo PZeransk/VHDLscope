@@ -48,9 +48,9 @@ begin
    GND_BIT <= '0';
    CLKIN_IBUFG_OUT <= CLKIN_IBUFG;
    CLK0_OUT <= CLKFB_IN;
-   CLKFX_OBUF_INST : OBUF
-      port map (I=>CLKFX_OBUF,
-                O=>CLKFX_OUT);
+   --CLKFX_OBUF_INST : OBUF
+      --port map (I=>CLKFX_OBUF,
+        --        O=>CLKFX_OUT);
    
    --CLKIN_IBUFG_INST : IBUFG
      -- port map (I=>CLKIN_IN,
@@ -87,7 +87,7 @@ begin
                 PSINCDEC=>GND_BIT,
                 RST=>RST_IN,
                 CLKDV=>open,
-                CLKFX=>CLKFX_OBUF,
+                CLKFX=>CLKFX_OUT,
                 CLKFX180=>open,
                 CLK0=>CLK0_BUF,
                 CLK2X=>open,

@@ -123,12 +123,12 @@ begin
         o_miso_stm      =>stm_miso,
         --o_rx_data_0		=>o_rx_data_0,
         --o_rx_data_1		=>o_rx_data_1
-        i_enable_i2c    =>enable_i2c,
-        i_addr_i2c      =>addr_i2c,
-        i_r_w_bit       =>r_w_bit,
-        i_data_0        =>data_0,
-        o_busy          =>busy,
-        o_read_data_0   =>read_data_0,
+        --i_enable_i2c    =>enable_i2c,
+        --i_addr_i2c      =>addr_i2c,
+        --i_r_w_bit       =>r_w_bit,
+        --i_data_0        =>data_0,
+        --o_busy          =>busy,
+        --o_read_data_0   =>read_data_0,
         io_scl          =>scl,
         io_sda          =>sda,
 

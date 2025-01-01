@@ -8,8 +8,7 @@ CONFIG VCCAUX = "3.3" ;
 
 # Reset Switch
         NET "i_reset_n"          LOC = P80   | PULLUP  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
-
-        NET "i_spi_clk" CLOCK_DEDICATED_ROUTE = FALSE;
+        NET "i_reset_n" CLOCK_DEDICATED_ROUTE = FALSE;
 
 # indicator LEDs
 
@@ -23,28 +22,31 @@ CONFIG VCCAUX = "3.3" ;
     NET "o_led_dbg[0]"             LOC = P55   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12; #D1
 
 
-####################################################################################################
-# HEADER P1 FPGA->STM
-####################################################################################################
-    NET "i_cs"           LOC = P31   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
-    NET "i_spi_clk"           LOC = P32   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
-    NET "i_enable"           LOC = P28   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
-    NET "i_mosi_stm"           LOC = P30   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
 
+####################################################################################################
+# HEADER P4 FPGA->STM
+####################################################################################################
+    
+    NET "i_mosi_stm"         LOC = P141  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    NET "i_enable"           LOC = P138  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    NET "i_cs"               LOC = P134  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    NET "i_spi_clk"          LOC = P130  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
 
 ####################################################################################################
 # HEADER P6 FPGA->ADC
 ####################################################################################################
    
-    NET "o_cs"           LOC = P19   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
-    NET "o_spi_clk"           LOC = P21   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    NET "o_cs"               LOC = P19   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    NET "o_spi_clk"          LOC = P21   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
     NET "o_mosi_0"           LOC = P18   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
     NET "i_miso_0"           LOC = P20   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
     NET "i_miso_1"           LOC = P15   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+
+
 
 
 ####################################################################################################
 # HEADER P2
 ####################################################################################################
 
-    NET "o_DCM_clk"           LOC = P10   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+    #NET "o_DCM_clk"           LOC = P11   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;

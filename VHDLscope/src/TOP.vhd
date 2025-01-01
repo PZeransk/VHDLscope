@@ -34,18 +34,18 @@ entity TOP is
        -- o_rx_data_0		:	out std_logic_vector(C_data_length - 1 downto 0);
        -- o_rx_data_1		:	out std_logic_vector(C_data_length - 1 downto 0)
     -- I2C signal
-		i_enable_i2c	: in  std_logic;
-		i_addr_i2c 		: in  std_logic_vector(C_addr_length - 1 downto 0);
-		i_r_w_bit 		: in  std_logic;
-		i_data_0 		: in  std_logic_vector(C_data_i2c_length - 1 downto 0);
-		o_busy 			: out std_logic;
-		o_read_data_0	: out std_logic_vector(C_data_i2c_length - 1 downto 0);
+		--i_enable_i2c	: in  std_logic;
+		--i_addr_i2c 		: in  std_logic_vector(C_addr_length - 1 downto 0);
+		--i_r_w_bit 		: in  std_logic;
+		--i_data_0 		: in  std_logic_vector(C_data_i2c_length - 1 downto 0);
+		--o_busy 			: out std_logic;
+		--o_read_data_0	: out std_logic_vector(C_data_i2c_length - 1 downto 0);
 		io_scl			: inout std_logic;
 		io_sda 			: inout std_logic;
 
        --debug LED output
         --o_led 			: 	out std_logic
-        o_DCM_clk		: out std_logic;
+        --o_DCM_clk		: out std_logic;
         o_led_dbg 		: out std_logic_vector(7 downto 0)
         );
 end TOP;
@@ -108,7 +108,7 @@ signal reset 		: std_logic := '0';
 signal init_reset_cnt	: integer range 0 to 3 :=0;
 
 signal dummy_sig0	: std_logic := '0';
-
+-- RAM signals
 signal ena 		: std_logic := '0';
 signal wea		: std_logic_vector(0 downto 0) := (others => '0');
 signal addra	: std_logic_vector(9 downto 0) := (others => '0');
@@ -121,11 +121,22 @@ signal dinb 	: std_logic_vector(9 downto 0) := (others => '0');
 signal doutb 	: std_logic_vector(9 downto 0) := (others => '0');
 
 
+-- i2c signals
+    signal enable_i2c       :   std_logic :='0';
+    signal addr_i2c         :   std_logic_vector(6 downto 0):="1100010"; --7 bit addr
+    signal r_w_bit          :   std_logic :='0';
+    signal data_0           :   std_logic_vector(7 downto 0):="10101010"; -- 8 bit data
+    signal busy             :   std_logic :='0';
+    signal read_data_0      :   std_logic_vector(7 downto 0); -- 8 bit data
+    signal scl              :   std_logic :='0';
+    signal sda              :   std_logic :='0';
+
+
 begin
 
 
 --reset <= NOT i_reset_n;
-o_DCM_clk <= DCM_clk_60;
+--o_DCM_clk <= DCM_clk_60;
 
 -- DCM must have reset state active for at least 3 i_clk cycles
 init_DCM_by_reset : process( i_clk, i_reset_n )
@@ -233,7 +244,7 @@ ADC_MEMORY: adc_mem
     addra 	=> addra,
     dina 	=> dina,
     douta 	=> douta,
-    clkb 	=> DCM_clk_60,
+    clkb 	=> i_clk,
     rstb 	=> i_reset_n,
     enb 	=> enb,
     web 	=> web,
@@ -252,12 +263,12 @@ generic map (
 port map (
 	i_clk 			=>DCM_clk_60,
 	i_reset_n 		=>i_reset_n,
-	i_enable_i2c	=>i_enable_i2c,
-	i_addr_i2c 		=>i_addr_i2c,
-	i_r_w_bit 		=>i_r_w_bit,
-	i_data_0 		=>i_data_0,
-	o_busy 			=>o_busy,
-	o_read_data_0	=>o_read_data_0,
+	i_enable_i2c	=>enable_i2c,
+	i_addr_i2c 		=>addr_i2c,
+	i_r_w_bit 		=>r_w_bit,
+	i_data_0 		=>data_0,
+	o_busy 			=>busy,
+	o_read_data_0	=>read_data_0,
 	o_ack_err 		=>ack_err,
 	io_scl			=>io_scl,
 	io_sda 			=>io_sda

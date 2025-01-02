@@ -132,7 +132,7 @@ begin
         io_scl          =>scl,
         io_sda          =>sda,
 
-        o_DCM_clk       =>open,
+        --o_DCM_clk       =>open,
         o_led_dbg       =>led_dbg
     );
 

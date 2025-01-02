@@ -24,10 +24,11 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity spi_master is
 GENERIC(
-	C_clk_ratio 	: 	integer;
-	C_data_length	:	integer;
-  C_cmd_size   : integer := 8;
-  C_data_size  : integer := 16
+	C_clk_ratio 	  : integer;
+	C_data_length	  :	integer;
+  C_adc_data_len  : integer := 10;
+  C_cmd_size      : integer := 8;
+  C_data_size     : integer := 16
 	);
 PORT(
 	i_clk			  :	in 	std_logic;
@@ -43,8 +44,8 @@ PORT(
 	o_cs			:	out std_logic;
 	o_spi_clk		:	out std_logic;
 	o_mosi_0		:	out	std_logic;
-	o_rx_data_0		:	out std_logic_vector(C_data_length - 1 downto 0);
-	o_rx_data_1		:	out std_logic_vector(C_data_length - 1 downto 0);
+	o_rx_data_0		:	out std_logic_vector(C_adc_data_len- 1 downto 0);
+	o_rx_data_1		:	out std_logic_vector(C_adc_data_len - 1 downto 0);
   --debug leds output, should display received command
   o_led_dbg     : out std_logic_vector(C_cmd_size - 1 downto 0)
 	);
@@ -121,7 +122,7 @@ o_cs <= '1';
 --CS state is inverted (active high instad of low) on STM32 it will be changed later
 IF i_enable = '1' THEN 
   -- i_params is split for clk divider and samples count
-  sample_max <= to_integer(unsigned(i_params(C_data_size - 7 downto 0)));
+  sample_max <= to_integer(unsigned(i_params(C_data_size - 7 downto 0)))+1;
   r_clk_state <= i_clk_polarity;
   clk_ratio <= to_integer(unsigned(i_params(C_data_size - 1 downto C_data_size - 6)));
   clk_ratio <= clk_ratio + 1; -- to avoid dividing with zero
@@ -165,8 +166,8 @@ if sample_cnt < sample_max then
       
       if(clk_cnt = C_data_length*2+1) then
         clk_cnt <= 0;
-        o_rx_data_0 <= r_rx_register0;
-        o_rx_data_1 <= r_rx_register1;
+        o_rx_data_0 <= r_rx_register0(C_adc_data_len - 1 downto 0);
+        o_rx_data_1 <= r_rx_register1(C_adc_data_len - 1 downto 0);
         o_cs <= '1';
         sample_cnt <= sample_cnt + 1;
         --r_current_state <= IDLE_SPI;

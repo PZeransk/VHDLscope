@@ -7,11 +7,12 @@ use IEEE.numeric_std.all;
 entity TOP is
     GENERIC(
     	C_data_i2c_length	: 	integer := 8;
-		C_addr_length	: 	integer := 7;
-		C_clk_speed 	: 	integer :=12000000; --current clock is 12 MHz may be changed later
-		C_i2c_scl_speed : 	integer := 400000; -- can be also 100 kHz, 1.7 MHz and 3.4 MHz 
-        C_clk_ratio 	: 	integer :=10;
-        C_data_length	:	integer :=12
+		C_addr_length		: 	integer := 7;
+		C_clk_speed 		: 	integer := 12000000; --current clock is 12 MHz may be changed later
+		C_i2c_scl_speed 	: 	integer := 400000; -- can be also 100 kHz, 1.7 MHz and 3.4 MHz 
+        C_clk_ratio 		: 	integer := 10;
+        C_adc_data_len  	: 	integer := 10;
+        C_data_length		:	integer := 12
         );
     PORT(
         i_clk			:	in 	std_logic;
@@ -87,8 +88,8 @@ COMPONENT adc_mem
 END COMPONENT;
 
 
-signal r_rx_data_0 	: std_logic_vector(C_data_length - 1 downto 0) := (others => '0');
-signal r_rx_data_1 	: std_logic_vector(C_data_length - 1 downto 0) := (others => '0');
+signal r_rx_data_0 	: std_logic_vector(C_adc_data_len - 1 downto 0) := (others => '0');
+signal r_rx_data_1 	: std_logic_vector(C_adc_data_len - 1 downto 0) := (others => '0');
 signal ack_err 		: std_logic:='0';
 signal data_tx_dummy	: std_logic_vector(7 downto 0) := "11111111";
 signal master_rx_data	: std_logic_vector(7 downto 0) :=(others => '0');

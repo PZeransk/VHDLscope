@@ -7,7 +7,15 @@
          <top_modules>
             <top_module name="numeric_std" />
             <top_module name="std_logic_1164" />
+            <top_module name="std_logic_arith" />
+            <top_module name="std_logic_textio" />
+            <top_module name="std_logic_unsigned" />
+            <top_module name="textio" />
             <top_module name="top_sim" />
+            <top_module name="vcomponents" />
+            <top_module name="vital_primitives" />
+            <top_module name="vital_timing" />
+            <top_module name="vpkg" />
          </top_modules>
       </db_ref>
    </db_ref_list>
@@ -116,8 +124,8 @@
       <obj_property name="ElementShortName">c_data_size</obj_property>
       <obj_property name="ObjectShortName">c_data_size</obj_property>
    </wvobject>
-   <wvobject fp_name="/top_sim/TOP_ENT/SPI_SLAVE_CONTROLLER/i_master_busy" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">i_master_busy</obj_property>
-      <obj_property name="ObjectShortName">i_master_busy</obj_property>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_rx_data_0" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">o_rx_data_0[11:0]</obj_property>
+      <obj_property name="ObjectShortName">o_rx_data_0[11:0]</obj_property>
    </wvobject>
 </wave_config>

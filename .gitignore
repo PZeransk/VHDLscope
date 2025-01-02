@@ -18,6 +18,7 @@ VHDLscope/isim
 *.txt
 *.pdf
 VHDLscope/planAhead*
+VHDLscope/ipcore_dir/tmp/*
 local/*
 .clangd
 .vscode

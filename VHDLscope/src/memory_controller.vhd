@@ -38,8 +38,8 @@ GENERIC(
 PORT(
 	i_clk			:	in 	std_logic;
 	i_reset_n		:	in 	std_logic;
-	i_enable		:	in 	std_logic;
-	i_adc_data_ok	:	in  std_logic;
+	--i_enable		:	in 	std_logic;
+	--i_adc_data_ok	:	in  std_logic;
   	i_adc_0_data	: 	in  std_logic_vector(C_adc_data_len - 1 downto 0);
   	i_adc_1_data	: 	in  std_logic_vector(C_adc_data_len - 1 downto 0);
   	o_addr_0		: 	out std_logic_vector(C_addr_len - 1 downto 0);
@@ -73,7 +73,8 @@ begin
 
 memory_state_machine : process( i_clk, i_reset_n )
 begin
-	
+o_mem_rst <= NOT i_reset_n;
+
 if i_reset_n = '0' then
   o_we_0 <= "0";
   o_we_1 <= "0";

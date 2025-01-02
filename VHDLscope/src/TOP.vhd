@@ -110,17 +110,17 @@ signal init_reset_cnt	: integer range 0 to 3 :=0;
 
 signal dummy_sig0	: std_logic := '0';
 -- RAM signals
-signal ena 		: std_logic := '0';
-signal wea		: std_logic_vector(0 downto 0) := (others => '0');
-signal addra	: std_logic_vector(9 downto 0) := (others => '0');
-signal dina		: std_logic_vector(9 downto 0) := (others => '0');
-signal douta	: std_logic_vector(9 downto 0) := (others => '0');
+signal mem_enable 		: std_logic := '0';
+signal wr_en_a		: std_logic_vector(0 downto 0) := (others => '0');
+signal addr_a	: std_logic_vector(9 downto 0) := (others => '0');
+signal data_in_a		: std_logic_vector(9 downto 0) := (others => '0');
+signal data_out_a	: std_logic_vector(9 downto 0) := (others => '0');
 signal enb 		: std_logic := '0';
-signal web 		: std_logic_vector(0 downto 0) := (others => '0');
-signal addrb	: std_logic_vector(9 downto 0) := (others => '0');
-signal dinb 	: std_logic_vector(9 downto 0) := (others => '0');
-signal doutb 	: std_logic_vector(9 downto 0) := (others => '0');
-
+signal wr_en_b 		: std_logic_vector(0 downto 0) := (others => '0');
+signal addr_b	: std_logic_vector(9 downto 0) := (others => '0');
+signal data_in_b 	: std_logic_vector(9 downto 0) := (others => '0');
+signal data_out_b 	: std_logic_vector(9 downto 0) := (others => '0');
+signal mem_reset	: std_logic := '0';
 
 -- i2c signals
     signal enable_i2c       :   std_logic :='0';
@@ -236,22 +236,43 @@ port map(
 	o_led_dbg 		=>o_led_dbg
 );
 
+
+ADC_MEM_CONTROLLER: entity work.memory_controller
+generic map(
+	C_adc_data_len	=> C_adc_data_len,
+	C_addr_len		=> 10
+)
+port map (
+	i_clk			=>DCM_clk_60,
+	i_reset_n		=>i_reset_n,
+	--i_enable		=>
+	--i_adc_data_ok	=>
+	i_adc_0_data	=>r_rx_data_0,
+	i_adc_1_data	=>r_rx_data_1,
+	o_addr_0		=>addr_a,
+	o_addr_1		=>addr_b,
+	o_we_0			=>wr_en_a,
+	o_we_1			=>wr_en_b,
+	o_mem_rst		=>mem_reset,
+	o_mem_enable	=>mem_enable
+);
+
 ADC_MEMORY: adc_mem
   PORT MAP (
     clka 	=> DCM_clk_60,
-    rsta 	=> i_reset_n,
-    ena 	=> ena,
-    wea 	=> wea,
-    addra 	=> addra,
-    dina 	=> dina,
-    douta 	=> douta,
-    clkb 	=> i_clk,
-    rstb 	=> i_reset_n,
-    enb 	=> enb,
-    web 	=> web,
-    addrb 	=> addrb,
-    dinb 	=> dinb,
-    doutb 	=> doutb
+    rsta 	=> mem_reset,
+    ena 	=> mem_enable,
+    wea 	=> wr_en_a,
+    addra 	=> addr_a,
+    dina 	=> data_in_a,
+    douta 	=> data_out_a,
+    clkb 	=> DCM_clk_60,
+    rstb 	=> mem_reset,
+    enb 	=> mem_enable,
+    web 	=> wr_en_b,
+    addrb 	=> addr_b,
+    dinb 	=> data_in_b,
+    doutb 	=> data_out_b
   );
 
 I2C_MASTER_0: entity work.i2c_master 

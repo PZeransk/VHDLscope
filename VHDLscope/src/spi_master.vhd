@@ -31,21 +31,22 @@ GENERIC(
   C_data_size     : integer := 16
 	);
 PORT(
-	i_clk			  :	in 	std_logic;
-	i_reset_n		:	in 	std_logic;
-	i_enable		:	in 	std_logic;
-  i_params    : in  std_logic_vector(C_data_size - 1 downto 0);
+	i_clk			    :	in 	std_logic;
+	i_reset_n		  :	in 	std_logic;
+	i_enable		  :	in 	std_logic;
+  i_params      : in  std_logic_vector(C_data_size - 1 downto 0);
 --	i_clk_polarity	:	in  std_logic;
 --	i_clk_phase		:	in 	std_logic;
-	i_miso_0		:	in 	std_logic;
-	i_miso_1		:	in 	std_logic;
+	i_miso_0		  :	in 	std_logic;
+	i_miso_1		  :	in 	std_logic;
 	--i_address		:	in 	std_logic_vector(C_data_length downto 0);
-  o_busy      : out std_logic;
-	o_cs			:	out std_logic;
-	o_spi_clk		:	out std_logic;
-	o_mosi_0		:	out	std_logic;
+  o_busy        : out std_logic;
+	o_cs			    :	out std_logic;
+	o_spi_clk		  :	out std_logic;
+	o_mosi_0		  :	out	std_logic;
 	o_rx_data_0		:	out std_logic_vector(C_adc_data_len- 1 downto 0);
 	o_rx_data_1		:	out std_logic_vector(C_adc_data_len - 1 downto 0);
+  o_data_ok     : out std_logic;
   --debug leds output, should display received command
   o_led_dbg     : out std_logic_vector(C_cmd_size - 1 downto 0)
 	);
@@ -55,6 +56,7 @@ architecture Behavioral of spi_master is
 
     type T_spi_states is (IDLE_SPI,
         TRANSFER,
+        TRANSFER_DONE,
         FINISHED);
 
 SIGNAL r_current_state 	: T_spi_states 	:= IDLE_SPI;
@@ -110,7 +112,7 @@ CASE r_current_state IS
 --------------------------------------------------------------------------------
 when IDLE_SPI => 
 o_cs <= '1';
-
+o_data_ok <= '0';
 --clk_cnt <= 0;
 --r_rx_register0 <= (others => '0');
 --r_rx_register1 <= (others => '0');
@@ -146,8 +148,8 @@ END IF;
 
 when TRANSFER =>
 
-
-if sample_cnt < sample_max then 
+    o_data_ok <= '0';
+--if sample_cnt < sample_max then 
     if(clk_cnt_ratio = C_clk_ratio - 1) then
       --o_spi_clk <= r_clk_state;
       clk_cnt <= clk_cnt + 1;
@@ -169,8 +171,8 @@ if sample_cnt < sample_max then
         o_rx_data_0 <= r_rx_register0(C_adc_data_len - 1 downto 0);
         o_rx_data_1 <= r_rx_register1(C_adc_data_len - 1 downto 0);
         o_cs <= '1';
-        sample_cnt <= sample_cnt + 1;
-        --r_current_state <= IDLE_SPI;
+        --sample_cnt <= sample_cnt + 1;
+        r_current_state <= TRANSFER_DONE;
       else
         o_cs <= '0';
        -- r_current_state <= TRANSFER;
@@ -180,20 +182,35 @@ if sample_cnt < sample_max then
       clk_cnt_ratio <= clk_cnt_ratio + 1;
       --r_current_state <= TRANSFER;
     end if;
-else
+--else
   -- reseting rx_cmd so it will be forced to wait for another tranfer from kernel
   -- without this cs becomes a clock, comment if you want to see 
   -- something on debug LEDs
 
-  rx_cmd <= (others => '0');
-  o_busy <= '0';
-  r_current_state <= FINISHED;
-end if;
+  --rx_cmd <= (others => '0');
+  --o_busy <= '0';
+  --r_current_state <= FINISHED;
+--end if;
+
+
+when TRANSFER_DONE =>
+  o_data_ok <= '1';
+  if(sample_cnt < sample_max) then 
+    
+    sample_cnt <= sample_cnt + 1;
+    r_current_state <= TRANSFER;
+  else 
+
+    rx_cmd <= (others => '0');
+    o_busy <= '0';
+    r_current_state <= FINISHED;
+  end if;
+
 
 when FINISHED =>
 
   o_busy <= '0';
-
+  o_data_ok <= '0';
   if(i_enable = '0') then
     r_current_state <= IDLE_SPI;
   else

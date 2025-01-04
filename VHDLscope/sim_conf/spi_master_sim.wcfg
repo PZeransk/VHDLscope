@@ -19,7 +19,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="20" />
+   <WVObjectSize size="21" />
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/i_clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">i_clk</obj_property>
       <obj_property name="ObjectShortName">i_clk</obj_property>
@@ -99,5 +99,9 @@
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_rx_data_0" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">o_rx_data_0[9:0]</obj_property>
       <obj_property name="ObjectShortName">o_rx_data_0[9:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_data_ok" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">o_data_ok</obj_property>
+      <obj_property name="ObjectShortName">o_data_ok</obj_property>
    </wvobject>
 </wave_config>

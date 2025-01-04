@@ -37,6 +37,7 @@ PORT(
   i_params      : in  std_logic_vector(C_data_size - 1 downto 0);
 --	i_clk_polarity	:	in  std_logic;
 --	i_clk_phase		:	in 	std_logic;
+  i_mem_ok      : in  std_logic;
 	i_miso_0		  :	in 	std_logic;
 	i_miso_1		  :	in 	std_logic;
 	--i_address		:	in 	std_logic_vector(C_data_length downto 0);
@@ -124,9 +125,9 @@ o_data_ok <= '0';
 --CS state is inverted (active high instad of low) on STM32 it will be changed later
 IF i_enable = '1' THEN 
   -- i_params is split for clk divider and samples count
-  sample_max <= to_integer(unsigned(i_params(C_data_size - 7 downto 0)))+1;
+  sample_max <= to_integer(unsigned(i_params(C_data_size - 7 downto 0)));
   r_clk_state <= i_clk_polarity;
-  clk_ratio <= to_integer(unsigned(i_params(C_data_size - 1 downto C_data_size - 6)));
+  clk_ratio <= to_integer(unsigned(i_params(C_data_size - 1 downto C_data_size - 6)))+1;
   clk_ratio <= clk_ratio + 1; -- to avoid dividing with zero
 
   clk_cnt_ratio <= 0;
@@ -194,18 +195,22 @@ when TRANSFER =>
 
 
 when TRANSFER_DONE =>
-  o_data_ok <= '1';
-  if(sample_cnt < sample_max) then 
-    
-    sample_cnt <= sample_cnt + 1;
-    r_current_state <= TRANSFER;
-  else 
+  --o_data_ok <= '1';
+  if(i_mem_ok = '1') then
+    if(sample_cnt < sample_max-1) then 
+      
+      sample_cnt <= sample_cnt + 1;
+      r_current_state <= TRANSFER;
+    else 
 
-    rx_cmd <= (others => '0');
-    o_busy <= '0';
-    r_current_state <= FINISHED;
+      rx_cmd <= (others => '0');
+      o_busy <= '0';
+      r_current_state <= FINISHED;
+    end if;
+    o_data_ok <= '0';
+  else
+    o_data_ok <= '1';
   end if;
-
 
 when FINISHED =>
 

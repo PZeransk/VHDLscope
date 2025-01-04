@@ -39,13 +39,14 @@ PORT(
 	i_clk			:	in 	std_logic;
 	i_reset_n		:	in 	std_logic;
 	--i_enable		:	in 	std_logic;
-	--i_adc_data_ok	:	in  std_logic;
+	i_adc_data_ok	:	in  std_logic;
   	i_adc_0_data	: 	in  std_logic_vector(C_adc_data_len - 1 downto 0);
   	i_adc_1_data	: 	in  std_logic_vector(C_adc_data_len - 1 downto 0);
   	o_addr_0		: 	out std_logic_vector(C_addr_len - 1 downto 0);
   	o_addr_1		: 	out std_logic_vector(C_addr_len - 1 downto 0);
   	o_we_0			: 	out std_logic_vector(0 downto 0);
   	o_we_1			: 	out std_logic_vector(0 downto 0);
+  	o_mem_ok		: 	out std_logic;
 	o_mem_rst		: 	out std_logic;
 	o_mem_enable	:	out std_logic
 	);
@@ -82,25 +83,46 @@ if i_reset_n = '0' then
   o_addr_1 <= (others => '0');
   o_mem_enable <= '0';
   current_state <= IDLE;
-
+  o_mem_ok <= '0';
 elsif rising_edge(i_clk) then
 	case current_state is
 		when IDLE =>
-			o_we_0 <= "0";
-  			o_we_1 <= "0";
-  			o_mem_enable <= '0';
+			--o_we_0 <= "0";
+  			--o_we_1 <= "0";
+  			--o_mem_enable <= '0';
+  			if i_adc_data_ok = '1' then
+  				o_mem_ok <= '1';
+  				current_state <= MEM_WRITE;
+  			else 
+  				o_mem_ok <= '0';
+  				current_state <= IDLE;
+  			end if;
+
+  			
+
 		when MEM_WRITE =>
-			o_we_0 <= "1";
-  			o_we_1 <= "1";
-  			o_mem_enable <= '1';
+			--o_we_0 <= "1";
+  			--o_we_1 <= "1";
+  			--o_mem_enable <= '1';
+  			
+  			o_mem_ok <= '0';
+  			current_state <= IDLE;
 		when MEM_READ =>
-			o_we_0 <= "0";
-  			o_we_1 <= "0";
-  			o_mem_enable <= '1';
+			--o_we_0 <= "0";
+  			--o_we_1 <= "0";
+  			--o_mem_enable <= '1';
+  			o_mem_ok <= '0';
+  			current_state <= IDLE;
+
 end case;
 
 end if;
 end process ; -- memory_state_machine
+
+write_memory : process( i_clk, i_adc_data_ok )
+begin
+	
+end process ; -- write_memory
 
 end Behavioral;
 

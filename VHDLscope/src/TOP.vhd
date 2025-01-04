@@ -107,7 +107,7 @@ signal DCM_clk0_out	: std_logic := '0';
 signal DCM_clk0_out1	: std_logic := '0';
 signal reset 		: std_logic := '0';
 signal init_reset_cnt	: integer range 0 to 3 :=0;
-
+signal data_ok_spi		: std_logic := '0';
 signal dummy_sig0	: std_logic := '0';
 -- RAM signals
 signal mem_enable 		: std_logic := '0';
@@ -121,7 +121,7 @@ signal addr_b	: std_logic_vector(9 downto 0) := (others => '0');
 signal data_in_b 	: std_logic_vector(9 downto 0) := (others => '0');
 signal data_out_b 	: std_logic_vector(9 downto 0) := (others => '0');
 signal mem_reset	: std_logic := '0';
-
+signal mem_ok_adc	: std_logic := '0';
 -- i2c signals
     signal enable_i2c       :   std_logic :='0';
     signal addr_i2c         :   std_logic_vector(6 downto 0):="1100010"; --7 bit addr
@@ -224,15 +224,17 @@ port map(
 	i_reset_n		=>i_reset_n,
 	i_enable		=>spi_enable,
 	i_params		=>int_data_trig,
+	i_mem_ok		=>mem_ok_adc,
 	i_miso_0		=>i_miso_0,
 	i_miso_1		=>i_miso_1,
 
 	o_busy			=>spi_busy,
-	o_cs			=>o_cs	,
+	o_cs			=>o_cs,
 	o_spi_clk		=>o_spi_clk,
 	o_mosi_0		=>o_mosi_0,
 	o_rx_data_0		=>r_rx_data_0,
 	o_rx_data_1		=>r_rx_data_1,
+	o_data_ok		=>data_ok_spi,
 	o_led_dbg 		=>o_led_dbg
 );
 
@@ -246,13 +248,14 @@ port map (
 	i_clk			=>DCM_clk_60,
 	i_reset_n		=>i_reset_n,
 	--i_enable		=>
-	--i_adc_data_ok	=>
+	i_adc_data_ok	=>data_ok_spi,
 	i_adc_0_data	=>r_rx_data_0,
 	i_adc_1_data	=>r_rx_data_1,
 	o_addr_0		=>addr_a,
 	o_addr_1		=>addr_b,
 	o_we_0			=>wr_en_a,
 	o_we_1			=>wr_en_b,
+	o_mem_ok		=>mem_ok_adc,
 	o_mem_rst		=>mem_reset,
 	o_mem_enable	=>mem_enable
 );

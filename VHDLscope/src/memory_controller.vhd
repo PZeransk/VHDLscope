@@ -23,7 +23,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
@@ -44,6 +44,8 @@ PORT(
   	i_adc_1_data	: 	in  std_logic_vector(C_adc_data_len - 1 downto 0);
   	o_addr_0		: 	out std_logic_vector(C_addr_len - 1 downto 0);
   	o_addr_1		: 	out std_logic_vector(C_addr_len - 1 downto 0);
+  	o_data_to_mem_0 :	out std_logic_vector(C_adc_data_len - 1 downto 0);
+  	o_data_to_mem_1 :	out std_logic_vector(C_adc_data_len - 1 downto 0);
   	o_we_0			: 	out std_logic_vector(0 downto 0);
   	o_we_1			: 	out std_logic_vector(0 downto 0);
   	o_mem_ok		: 	out std_logic;
@@ -67,31 +69,46 @@ architecture Behavioral of memory_controller is
 
 	signal temp_addr_0 : std_logic_vector(C_addr_len - 1 downto 0) := (others => '0');
 	signal temp_addr_1 : std_logic_vector(C_addr_len - 1 downto 0) := (others => '0');
-
+	signal addr_0 	   : std_logic_vector(C_addr_len - 1 downto 0) := (others => '0');
+	signal addr_1 	   : std_logic_vector(C_addr_len - 1 downto 0) := (others => '0');
 
 
 begin
 
 memory_state_machine : process( i_clk, i_reset_n )
 begin
+--reversing reset polarity
 o_mem_rst <= NOT i_reset_n;
+
 
 if i_reset_n = '0' then
   o_we_0 <= "0";
   o_we_1 <= "0";
-  o_addr_0 <= (others => '0');
-  o_addr_1 <= (others => '0');
+  addr_0 <= (others => '0');
+  addr_1 <= (others => '0');
   o_mem_enable <= '0';
   current_state <= IDLE;
   o_mem_ok <= '0';
 elsif rising_edge(i_clk) then
 	case current_state is
 		when IDLE =>
-			--o_we_0 <= "0";
-  			--o_we_1 <= "0";
-  			--o_mem_enable <= '0';
+			o_we_0 <= "0";
+  			o_we_1 <= "0";
+  			o_mem_enable <= '0';
+
   			if i_adc_data_ok = '1' then
   				o_mem_ok <= '1';
+  				o_mem_enable <= '1';
+  				if(addr_0 < "1111111111") then
+  					--addr_0 <= addr_0 + 1;
+
+  					addr_0 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_0))) + 1),10));
+  					addr_1 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_1))) + 1),10));
+  				else 
+  					addr_0 <= (others => '0');
+  					-- state <= mem_overflow
+  				end if;
+
   				current_state <= MEM_WRITE;
   			else 
   				o_mem_ok <= '0';
@@ -101,8 +118,8 @@ elsif rising_edge(i_clk) then
   			
 
 		when MEM_WRITE =>
-			--o_we_0 <= "1";
-  			--o_we_1 <= "1";
+			o_we_0 <= "1";
+  			o_we_1 <= "1";
   			--o_mem_enable <= '1';
   			
   			o_mem_ok <= '0';
@@ -117,10 +134,20 @@ elsif rising_edge(i_clk) then
 end case;
 
 end if;
+
+o_data_to_mem_0 <= i_adc_0_data;
+o_data_to_mem_1 <= i_adc_1_data;
+
+o_addr_0 <= addr_0;
+o_addr_1 <= addr_1;
+
 end process ; -- memory_state_machine
 
 write_memory : process( i_clk, i_adc_data_ok )
 begin
+
+
+
 	
 end process ; -- write_memory
 

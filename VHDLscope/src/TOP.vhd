@@ -110,18 +110,20 @@ signal init_reset_cnt	: integer range 0 to 3 :=0;
 signal data_ok_spi		: std_logic := '0';
 signal dummy_sig0	: std_logic := '0';
 -- RAM signals
-signal mem_enable 		: std_logic := '0';
+signal mem_enable 	: std_logic := '0';
 signal wr_en_a		: std_logic_vector(0 downto 0) := (others => '0');
-signal addr_a	: std_logic_vector(9 downto 0) := (others => '0');
-signal data_in_a		: std_logic_vector(9 downto 0) := (others => '0');
+signal addr_a		: std_logic_vector(9 downto 0) := (others => '0');
+signal data_in_a	: std_logic_vector(9 downto 0) := (others => '0');
 signal data_out_a	: std_logic_vector(9 downto 0) := (others => '0');
-signal enb 		: std_logic := '0';
+signal enb 			: std_logic := '0';
 signal wr_en_b 		: std_logic_vector(0 downto 0) := (others => '0');
-signal addr_b	: std_logic_vector(9 downto 0) := (others => '0');
+signal addr_b		: std_logic_vector(9 downto 0) := (others => '0');
 signal data_in_b 	: std_logic_vector(9 downto 0) := (others => '0');
 signal data_out_b 	: std_logic_vector(9 downto 0) := (others => '0');
 signal mem_reset	: std_logic := '0';
 signal mem_ok_adc	: std_logic := '0';
+signal data_to_mem_a :std_logic_vector(9 downto 0) := (others => '0');
+signal data_to_mem_b :std_logic_vector(9 downto 0) := (others => '0');
 -- i2c signals
     signal enable_i2c       :   std_logic :='0';
     signal addr_i2c         :   std_logic_vector(6 downto 0):="1100010"; --7 bit addr
@@ -253,6 +255,8 @@ port map (
 	i_adc_1_data	=>r_rx_data_1,
 	o_addr_0		=>addr_a,
 	o_addr_1		=>addr_b,
+	o_data_to_mem_0 =>data_to_mem_a,
+	o_data_to_mem_1 =>data_to_mem_b,
 	o_we_0			=>wr_en_a,
 	o_we_1			=>wr_en_b,
 	o_mem_ok		=>mem_ok_adc,
@@ -267,14 +271,14 @@ ADC_MEMORY: adc_mem
     ena 	=> mem_enable,
     wea 	=> wr_en_a,
     addra 	=> addr_a,
-    dina 	=> data_in_a,
+    dina 	=> data_to_mem_a,
     douta 	=> data_out_a,
     clkb 	=> DCM_clk_60,
     rstb 	=> mem_reset,
     enb 	=> mem_enable,
     web 	=> wr_en_b,
     addrb 	=> addr_b,
-    dinb 	=> data_in_b,
+    dinb 	=> data_to_mem_b,
     doutb 	=> data_out_b
   );
 

@@ -218,6 +218,8 @@ port map(
 
 SPI_MASTER_0: entity work.spi_master
 generic map(
+	C_i_clk_freq	=> 60000000,
+	C_max_spi_freq	=> 24000000,
     C_clk_ratio 	=> C_clk_ratio,
 	C_data_length	=> C_data_length
 )

@@ -61,7 +61,7 @@ constant r_fun_gen_cmd    : std_logic_vector(C_cmd_size-1 downto 0)  := "0000100
 
 signal r_current_state  : T_spi_states  := SPI_IDLE;
 
-signal sample_size_cmd  : std_logic_vector(C_data_size-1 downto 0) := "0000000000000100";
+signal sample_size_cmd  : std_logic_vector(C_data_size-1 downto 0) := "0000000000000111";
 signal cmd_to_send      : std_logic_vector(C_cmd_size+C_data_size-1 downto 0) := (others => '0');
 signal clk_cnt          : integer range 0 to C_clk_div := 0;
 signal total_size       : integer range 0 to C_cmd_size+C_data_size := C_cmd_size+C_data_size;

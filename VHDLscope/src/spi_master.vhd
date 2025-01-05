@@ -24,6 +24,8 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity spi_master is
 GENERIC(
+  C_i_clk_freq    : integer;
+  C_max_spi_freq  : integer;
 	C_clk_ratio 	  : integer;
 	C_data_length	  :	integer;
   C_adc_data_len  : integer := 10;
@@ -54,6 +56,8 @@ PORT(
 end spi_master;
 
 architecture Behavioral of spi_master is
+-- Constant to not excede maximum spi freq of ADC
+constant C_clk_min_div : integer range 0 to 100 := C_i_clk_freq/C_max_spi_freq + 1; 
 
     type T_spi_states is (IDLE_SPI,
         TRANSFER,
@@ -127,8 +131,8 @@ IF i_enable = '1' THEN
   -- i_params is split for clk divider and samples count
   sample_max <= to_integer(unsigned(i_params(C_data_size - 7 downto 0)));
   r_clk_state <= i_clk_polarity;
-  clk_ratio <= to_integer(unsigned(i_params(C_data_size - 1 downto C_data_size - 6)))+1;
-  clk_ratio <= clk_ratio + 1; -- to avoid dividing with zero
+  clk_ratio <= to_integer(unsigned(i_params(C_data_size - 1 downto C_data_size - 6)))+C_clk_min_div;
+  --clk_ratio <= clk_ratio + 1; -- to avoid dividing with zero
 
   clk_cnt_ratio <= 0;
   clk_cnt <= 0;
@@ -151,7 +155,7 @@ when TRANSFER =>
 
     o_data_ok <= '0';
 --if sample_cnt < sample_max then 
-    if(clk_cnt_ratio = C_clk_ratio - 1) then
+    if(clk_cnt_ratio = clk_ratio - 1) then
       --o_spi_clk <= r_clk_state;
       clk_cnt <= clk_cnt + 1;
       clk_cnt_ratio <= 0;

@@ -85,7 +85,7 @@ if i_reset_n = '0' then
   o_we_0 <= "0";
   o_we_1 <= "0";
   addr_0 <= (others => '0');
-  addr_1 <= (others => '0');
+  addr_1 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_0))) + 512),10));
   o_mem_enable <= '0';
   current_state <= IDLE;
   o_mem_ok <= '0';
@@ -94,18 +94,19 @@ elsif rising_edge(i_clk) then
 		when IDLE =>
 			o_we_0 <= "0";
   			o_we_1 <= "0";
-  			o_mem_enable <= '0';
+  			o_mem_enable <= '1';
 
   			if i_adc_data_ok = '1' then
   				o_mem_ok <= '1';
   				o_mem_enable <= '1';
-  				if(addr_0 < "1111111111") then
+  				if(addr_0 < "0111111111") then
   					--addr_0 <= addr_0 + 1;
-
+  					-- dividing RAM to two 512 vectors
   					addr_0 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_0))) + 1),10));
-  					addr_1 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_1))) + 1),10));
+  					addr_1 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_0))) + 512),10));
   				else 
   					addr_0 <= (others => '0');
+  					addr_1 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_0))) + 512),10));
   					-- state <= mem_overflow
   				end if;
 

@@ -136,7 +136,7 @@ begin
         o_led_dbg       =>led_dbg
     );
 
-    DAC_SIM_0: entity work.dac_sim 
+    DAC_SIM_0: entity work.dac_sim
     port map (
         io_sda      => sda,
         i_scl      => scl,
@@ -145,6 +145,10 @@ begin
 
 
     ADC_SIM_0: entity work.adc_sim
+    generic map (
+         C_data_length => 12,
+         C_divider     => 1
+     ) 
     port map(
         i_clk   => o_spi_clk,
         i_cs    => cs,
@@ -152,6 +156,10 @@ begin
     );
 
     ADC_SIM_1: entity work.adc_sim
+    generic map (
+         C_data_length => 12,
+         C_divider     => 10
+     ) 
     port map(
         i_clk   => o_spi_clk,
         i_cs    => cs,

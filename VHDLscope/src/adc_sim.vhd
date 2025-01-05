@@ -5,7 +5,8 @@ use IEEE.numeric_std.all;
 
 
 entity adc_sim is
-Generic(C_data_length	:	integer := 12
+Generic(C_data_length	:	integer := 12;
+        C_divider       :   integer := 1
 	);
 Port (
 	i_clk 	: in 	std_logic;
@@ -56,7 +57,7 @@ change_data: process (i_cs)
             else
                     r_table_cnt <= r_table_cnt + 1;
             end if;
-                r_adc_data0 <= "00" & std_logic_vector(to_unsigned(C_sine_LUT(r_table_cnt),10));
+                r_adc_data0 <= "00" & std_logic_vector(to_unsigned(C_sine_LUT(r_table_cnt)/C_divider,10));
         end if;
 end process;
 

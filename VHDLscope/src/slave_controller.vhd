@@ -47,7 +47,10 @@ PORT(
 	i_master_busy 	: 	in std_logic;
 
 	--o_data_ok 		:   out std_logic;
+	o_en_gen  		:	out std_logic;
+	o_data_gen 		: 	out std_logic_vector(2*C_data_length - 1 downto 0);
 	o_en_trigger	:	out std_logic;
+	o_en_read 		: 	out std_logic;
 	o_cmd 			: 	out std_logic_vector(C_cmd_size - 1 downto 0);
 	o_data_trig		:	out std_logic_vector(2*C_data_length - 1 downto 0)-- data received from master
 	);
@@ -57,8 +60,9 @@ architecture Behavioral of slave_controller is
 
 
 
-constant trigger_cmd : std_logic_vector(C_cmd_size - 1 downto 0)  := "00001000"; 
-constant fun_gen_cmd : std_logic_vector(C_cmd_size - 1 downto 0)  := "00001001";
+constant C_trigger_cmd : std_logic_vector(C_cmd_size - 1 downto 0)  := "00001000"; 
+constant C_fun_gen_cmd : std_logic_vector(C_cmd_size - 1 downto 0)  := "00001001";
+constant C_read_mem    : std_logic_vector(C_cmd_size - 1 downto 0)  := "00001010"; 	
 constant array_size : integer := C_data_size/C_data_length; 
 
 type T_rx_array is array (0 to array_size - 1) of std_logic_vector(C_data_length - 1 downto 0);
@@ -70,7 +74,7 @@ SIGNAL rx_data 	: std_logic_vector(C_data_size - 1 downto 0) := (others => '0');
 SIGNAL rx_cmd	: std_logic_vector(C_cmd_size - 1 downto 0) := (others => '0');
 SIGNAL data_cnt : integer range 0 to 3 := 0;
 SIGNAL data_ok 	: std_logic := '0'; 
-
+signal en_read 	: std_logic := '0';
 begin
 
 
@@ -117,27 +121,55 @@ process(i_clk)
 begin
 
 if i_reset_n = '0' then -- or data_reset is high
-
-
+	en_read <= '0';
+	o_en_trigger <= '0';
+	o_en_gen <= '0';
 elsif rising_edge(i_clk) then
-	if((rx_cmd = trigger_cmd AND data_cnt = 3 ) OR i_master_busy = '1') then
+	if((rx_cmd = C_trigger_cmd AND data_cnt = 3 ) OR i_master_busy = '1') then
 		o_en_trigger <= '1';
+		o_en_gen <= '0';
 		o_data_trig <= rx_array(0)&rx_array(1);
 	else 
 		o_en_trigger <= '0';
+		o_en_gen <= '0';
 	end if;
 
-	--if (rx_cmd = trigger_cmd AND data_cnt = 3) then
+	if (rx_cmd = C_fun_gen_cmd AND data_cnt = 3) then
 	--to sig gen
-		--o_en_gen <= '1';
-		--o_data_gen<= rx_array(0)&rx_array(1);
+		o_en_trigger <= '0';
+		o_en_gen <= '1';
+		o_data_gen<= rx_array(0)&rx_array(1);
 
-	--end if;
+	end if;
+
+
+	if (rx_cmd = C_read_mem AND data_cnt = 3) then
+	--to sig gen
+		en_read <= '1';
+
+	end if;
 
 end if;
 
+o_en_read <= en_read;
 
 end process;
+
+
+
+
+read_mem_and_send_to_master : process( i_clk )
+begin
+	
+	if i_reset_n = '0' then -- or data_reset is high
+
+	elsif rising_edge(i_clk) then
+		if(en_read = '1') then
+			
+		end if;
+
+	end if;
+end process ; -- read_mem_and_send_to_master
 
 end Behavioral;
 

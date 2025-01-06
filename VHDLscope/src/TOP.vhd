@@ -124,6 +124,8 @@ signal mem_reset	: std_logic := '0';
 signal mem_ok_adc	: std_logic := '0';
 signal data_to_mem_a :std_logic_vector(9 downto 0) := (others => '0');
 signal data_to_mem_b :std_logic_vector(9 downto 0) := (others => '0');
+signal read_mem 	: STD_LOGIC := '0';
+signal mem_read_ok 	: STD_LOGIC := '0';
 -- i2c signals
     signal enable_i2c       :   std_logic :='0';
     signal addr_i2c         :   std_logic_vector(6 downto 0):="1100010"; --7 bit addr
@@ -255,6 +257,7 @@ port map (
 	i_adc_data_ok	=>data_ok_spi,
 	i_adc_0_data	=>r_rx_data_0,
 	i_adc_1_data	=>r_rx_data_1,
+	i_read 			=>read_mem,
 	o_addr_0		=>addr_a,
 	o_addr_1		=>addr_b,
 	o_data_to_mem_0 =>data_to_mem_a,
@@ -263,6 +266,7 @@ port map (
 	o_we_1			=>wr_en_b,
 	o_mem_ok		=>mem_ok_adc,
 	o_mem_rst		=>mem_reset,
+	o_mem_read_ok 	=>mem_read_ok,
 	o_mem_enable	=>mem_enable
 );
 

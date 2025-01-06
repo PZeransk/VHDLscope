@@ -98,6 +98,8 @@ case r_current_state IS
       cmd_to_send <= C_trigger_cmd&sample_size_cmd;
     elsif i_cmd_sel = "01" then
       cmd_to_send <= C_fun_gen_cmd&sample_size_cmd;
+    elsif i_cmd_sel = "10" then
+      cmd_to_send <= C_read_mem&sample_size_cmd;
     end if;
 
     if i_trigger = '0' then

@@ -42,6 +42,7 @@ PORT(
 	i_adc_data_ok	:	in  std_logic;
   	i_adc_0_data	: 	in  std_logic_vector(C_adc_data_len - 1 downto 0);
   	i_adc_1_data	: 	in  std_logic_vector(C_adc_data_len - 1 downto 0);
+  	i_read			:	in  std_logic;
   	o_addr_0		: 	out std_logic_vector(C_addr_len - 1 downto 0);
   	o_addr_1		: 	out std_logic_vector(C_addr_len - 1 downto 0);
   	o_data_to_mem_0 :	out std_logic_vector(C_adc_data_len - 1 downto 0);
@@ -50,6 +51,7 @@ PORT(
   	o_we_1			: 	out std_logic_vector(0 downto 0);
   	o_mem_ok		: 	out std_logic;
 	o_mem_rst		: 	out std_logic;
+	o_mem_read_ok	:	out std_logic;
 	o_mem_enable	:	out std_logic
 	);
 
@@ -62,6 +64,7 @@ architecture Behavioral of memory_controller is
 	constant addr_min : std_logic_vector(C_addr_len - 1 downto 0) := (others => '0'); 
 	type T_mem_states is(
 		IDLE,
+		SET_DATA,
 		MEM_WRITE,
 		MEM_READ
 		);
@@ -71,7 +74,8 @@ architecture Behavioral of memory_controller is
 	signal temp_addr_1 : std_logic_vector(C_addr_len - 1 downto 0) := (others => '0');
 	signal addr_0 	   : std_logic_vector(C_addr_len - 1 downto 0) := (others => '0');
 	signal addr_1 	   : std_logic_vector(C_addr_len - 1 downto 0) := (others => '0');
-
+	signal mem_ok 	   : std_logic := '0';
+	signal mem_read_ok : std_logic := '0';
 
 begin
 
@@ -79,7 +83,8 @@ memory_state_machine : process( i_clk, i_reset_n )
 begin
 --reversing reset polarity
 o_mem_rst <= NOT i_reset_n;
-
+o_mem_ok  <= mem_ok;
+o_mem_read_ok <= mem_read_ok;
 
 if i_reset_n = '0' then
   o_we_0 <= "0";
@@ -96,40 +101,57 @@ elsif rising_edge(i_clk) then
   			o_we_1 <= "0";
   			o_mem_enable <= '1';
 
-  			if i_adc_data_ok = '1' then
-  				o_mem_ok <= '1';
-  				o_mem_enable <= '1';
-  				if(addr_0 < "0111111111") then
-  					--addr_0 <= addr_0 + 1;
-  					-- dividing RAM to two 512 vectors
-  					addr_0 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_0))) + 1),10));
-  					addr_1 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_0))) + 512),10));
-  				else 
-  					addr_0 <= (others => '0');
-  					addr_1 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_0))) + 512),10));
-  					-- state <= mem_overflow
-  				end if;
+  			if i_adc_data_ok = '1' AND i_read = '0' then
+  				mem_ok <= '1';
+  				mem_read_ok <= '0';
 
-  				current_state <= MEM_WRITE;
+  				current_state <= SET_DATA;
+  			elsif i_read = '1' then
+  			--read from the beginning of memory adresses
+  				mem_read_ok <= '1'; 
+  				addr_0 <= (others => '0');
+  				addr_1 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_0))) + 512),10));
+  				current_state <= SET_DATA;
   			else 
-  				o_mem_ok <= '0';
+  				mem_ok <= '0';
   				current_state <= IDLE;
   			end if;
 
-  			
+  		when SET_DATA =>
+  				
+  			o_mem_enable <= '1';
+  			if(addr_0 < "0111111111") then
+  				--addr_0 <= addr_0 + 1;
+  				-- dividing RAM to two 512 vectors
+  				addr_0 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_0))) + 1),10));
+  				addr_1 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_0))) + 512),10));
+  			else 
+  				addr_0 <= (others => '0');
+  				addr_1 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_0))) + 512),10));
+  				-- state <= mem_overflow
+  			end if;
+
+  			if mem_ok = '1' then 
+  				current_state <= MEM_WRITE;
+  			elsif mem_read_ok = '1' then
+  				current_state <= MEM_READ;
+  			else 
+  				mem_ok <= '0';
+  				current_state <= IDLE;
+  			end if;
 
 		when MEM_WRITE =>
 			o_we_0 <= "1";
   			o_we_1 <= "1";
   			--o_mem_enable <= '1';
   			
-  			o_mem_ok <= '0';
+  			mem_ok <= '0';
   			current_state <= IDLE;
 		when MEM_READ =>
-			--o_we_0 <= "0";
-  			--o_we_1 <= "0";
+			o_we_0 <= "0";
+  			o_we_1 <= "0";
   			--o_mem_enable <= '1';
-  			o_mem_ok <= '0';
+  			mem_ok <= '0';
   			current_state <= IDLE;
 
 end case;

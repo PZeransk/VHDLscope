@@ -19,7 +19,10 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="30" />
+   <WVObjectSize size="27" />
+   <wave_markers>
+      <marker time="39842477000" label="" />
+   </wave_markers>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/i_clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">i_clk</obj_property>
       <obj_property name="ObjectShortName">i_clk</obj_property>
@@ -72,33 +75,13 @@
       <obj_property name="ElementShortName">clk_cnt</obj_property>
       <obj_property name="ObjectShortName">clk_cnt</obj_property>
    </wvobject>
-   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/clk_cnt_ratio" type="other" db_ref_id="1">
-      <obj_property name="ElementShortName">clk_cnt_ratio</obj_property>
-      <obj_property name="ObjectShortName">clk_cnt_ratio</obj_property>
-   </wvobject>
-   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/cs" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">cs</obj_property>
-      <obj_property name="ObjectShortName">cs</obj_property>
-   </wvobject>
-   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/spi_clk" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">spi_clk</obj_property>
-      <obj_property name="ObjectShortName">spi_clk</obj_property>
-   </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/clk_ratio" type="other" db_ref_id="1">
       <obj_property name="ElementShortName">clk_ratio</obj_property>
       <obj_property name="ObjectShortName">clk_ratio</obj_property>
    </wvobject>
-   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/rx_cmd" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">rx_cmd[7:0]</obj_property>
-      <obj_property name="ObjectShortName">rx_cmd[7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/sample_cmd" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">sample_cmd[15:0]</obj_property>
-      <obj_property name="ObjectShortName">sample_cmd[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/c_clk_ratio" type="other" db_ref_id="1">
-      <obj_property name="ElementShortName">c_clk_ratio</obj_property>
-      <obj_property name="ObjectShortName">c_clk_ratio</obj_property>
+   <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEM_CONTROLLER/i_read" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_read</obj_property>
+      <obj_property name="ObjectShortName">i_read</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_rx_data_0" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">o_rx_data_0[9:0]</obj_property>
@@ -128,10 +111,6 @@
       <obj_property name="ElementShortName">o_we_0[0:0]</obj_property>
       <obj_property name="ObjectShortName">o_we_0[0:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEMORY/douta" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">douta[9:0]</obj_property>
-      <obj_property name="ObjectShortName">douta[9:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEM_CONTROLLER/o_mem_enable" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">o_mem_enable</obj_property>
       <obj_property name="ObjectShortName">o_mem_enable</obj_property>
@@ -139,5 +118,17 @@
    <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEMORY/dina" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">dina[9:0]</obj_property>
       <obj_property name="ObjectShortName">dina[9:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEMORY/douta" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">douta[9:0]</obj_property>
+      <obj_property name="ObjectShortName">douta[9:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEMORY/doutb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">doutb[9:0]</obj_property>
+      <obj_property name="ObjectShortName">doutb[9:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEM_CONTROLLER/addr_0" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addr_0[9:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_0[9:0]</obj_property>
    </wvobject>
 </wave_config>

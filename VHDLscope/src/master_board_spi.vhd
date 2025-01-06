@@ -56,9 +56,9 @@ type T_spi_states is (
   SPI_POST_TRANSFER
   );
 
-constant r_trigger_cmd    : std_logic_vector(C_cmd_size-1 downto 0)  := "00001000";
-constant r_fun_gen_cmd    : std_logic_vector(C_cmd_size-1 downto 0)  := "00001001";
-
+constant C_trigger_cmd    : std_logic_vector(C_cmd_size-1 downto 0)  := "00001000";
+constant C_fun_gen_cmd    : std_logic_vector(C_cmd_size-1 downto 0)  := "00001001";
+constant C_read_mem       : std_logic_vector(C_cmd_size-1 downto 0) := "00001010"; 
 signal r_current_state  : T_spi_states  := SPI_IDLE;
 
 signal sample_size_cmd  : std_logic_vector(C_data_size-1 downto 0) := "0000000000000111";
@@ -81,7 +81,7 @@ if i_reset_n = '0' then
   clk_cnt <= 0;
   spi_clk_cnt <= 0;
   o_cs <= '0';
-  cmd_to_send <= r_trigger_cmd&sample_size_cmd;
+  cmd_to_send <= C_trigger_cmd&sample_size_cmd;
   r_current_state <= SPI_IDLE;
 elsif rising_edge(i_clk) then
 
@@ -95,9 +95,9 @@ case r_current_state IS
     clk_cnt <= 0;
     spi_clk_cnt <= 0;
     if i_cmd_sel = "00" then
-      cmd_to_send <= r_trigger_cmd&sample_size_cmd;
+      cmd_to_send <= C_trigger_cmd&sample_size_cmd;
     elsif i_cmd_sel = "01" then
-      cmd_to_send <= r_fun_gen_cmd&sample_size_cmd;
+      cmd_to_send <= C_fun_gen_cmd&sample_size_cmd;
     end if;
 
     if i_trigger = '0' then

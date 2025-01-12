@@ -76,6 +76,8 @@ architecture Behavioral of memory_controller is
 	signal addr_1 	   : std_logic_vector(C_addr_len - 1 downto 0) := (others => '0');
 	signal mem_ok 	   : std_logic := '0';
 	signal mem_read_ok : std_logic := '0';
+	signal write_cnt   : integer range 0 to 1024 := 0;
+	signal read_cnt	   : integer range 0 to 1024 := 0;
 
 begin
 
@@ -94,6 +96,7 @@ if i_reset_n = '0' then
   o_mem_enable <= '0';
   current_state <= IDLE;
   o_mem_ok <= '0';
+  write_cnt <= 0;
 elsif rising_edge(i_clk) then
 	case current_state is
 		when IDLE =>
@@ -106,12 +109,18 @@ elsif rising_edge(i_clk) then
   				mem_read_ok <= '0';
 
   				current_state <= SET_DATA;
-  			elsif i_read = '1' then
+  			elsif i_read = '1' AND read_cnt < write_cnt then
   			--read from the beginning of memory adresses
+  			-- you can call that a memory dump 
   				mem_read_ok <= '1'; 
   				addr_0 <= (others => '0');
   				addr_1 <= std_logic_vector(to_unsigned(((to_integer(unsigned(addr_0))) + 512),10));
   				current_state <= SET_DATA;
+
+  			elsif i_read = '1' AND read_cnt >= write_cnt then
+  				read_cnt <= 0;
+  				--memory done state
+  				current_state <= IDLE;
   			else 
   				mem_ok <= '0';
   				current_state <= IDLE;
@@ -144,13 +153,15 @@ elsif rising_edge(i_clk) then
 			o_we_0 <= "1";
   			o_we_1 <= "1";
   			--o_mem_enable <= '1';
-  			
+
+  			write_cnt <= write_cnt + 1;
   			mem_ok <= '0';
   			current_state <= IDLE;
 		when MEM_READ =>
 			o_we_0 <= "0";
   			o_we_1 <= "0";
   			--o_mem_enable <= '1';
+  			read_cnt <= read_cnt + 1;
   			mem_ok <= '0';
   			current_state <= IDLE;
 

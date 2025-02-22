@@ -19,10 +19,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="27" />
-   <wave_markers>
-      <marker time="39842477000" label="" />
-   </wave_markers>
+   <WVObjectSize size="30" />
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/i_clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">i_clk</obj_property>
       <obj_property name="ObjectShortName">i_clk</obj_property>
@@ -35,100 +32,166 @@
       <obj_property name="ElementShortName">i_params[15:0]</obj_property>
       <obj_property name="ObjectShortName">i_params[15:0]</obj_property>
    </wvobject>
+   <wvobject fp_name="/top_sim/STM32_SIM/i_cmd_sel" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">i_cmd_sel[1:0]</obj_property>
+      <obj_property name="ObjectShortName">i_cmd_sel[1:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#c0c0c0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/STM32_SIM/i_trigger" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_trigger</obj_property>
+      <obj_property name="ObjectShortName">i_trigger</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#c0c0c0</obj_property>
+   </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/sample_max" type="other" db_ref_id="1">
       <obj_property name="ElementShortName">sample_max</obj_property>
       <obj_property name="ObjectShortName">sample_max</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/i_miso_0" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">i_miso_0</obj_property>
       <obj_property name="ObjectShortName">i_miso_0</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/i_enable" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">i_enable</obj_property>
       <obj_property name="ObjectShortName">i_enable</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_busy" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">o_busy</obj_property>
       <obj_property name="ObjectShortName">o_busy</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_cs" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">o_cs</obj_property>
       <obj_property name="ObjectShortName">o_cs</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_spi_clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">o_spi_clk</obj_property>
       <obj_property name="ObjectShortName">o_spi_clk</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_mosi_0" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">o_mosi_0</obj_property>
       <obj_property name="ObjectShortName">o_mosi_0</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_rx_data_1" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">o_rx_data_1[9:0]</obj_property>
       <obj_property name="ObjectShortName">o_rx_data_1[9:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/r_current_state" type="other" db_ref_id="1">
       <obj_property name="ElementShortName">r_current_state</obj_property>
       <obj_property name="ObjectShortName">r_current_state</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/clk_cnt" type="other" db_ref_id="1">
       <obj_property name="ElementShortName">clk_cnt</obj_property>
       <obj_property name="ObjectShortName">clk_cnt</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/clk_ratio" type="other" db_ref_id="1">
       <obj_property name="ElementShortName">clk_ratio</obj_property>
       <obj_property name="ObjectShortName">clk_ratio</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEM_CONTROLLER/i_read" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">i_read</obj_property>
       <obj_property name="ObjectShortName">i_read</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_rx_data_0" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">o_rx_data_0[9:0]</obj_property>
       <obj_property name="ObjectShortName">o_rx_data_0[9:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/SPI_MASTER_0/o_data_ok" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">o_data_ok</obj_property>
       <obj_property name="ObjectShortName">o_data_ok</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEM_CONTROLLER/current_state" type="other" db_ref_id="1">
       <obj_property name="ElementShortName">current_state</obj_property>
       <obj_property name="ObjectShortName">current_state</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEM_CONTROLLER/i_adc_0_data" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">i_adc_0_data[9:0]</obj_property>
       <obj_property name="ObjectShortName">i_adc_0_data[9:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEM_CONTROLLER/o_addr_0" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">o_addr_0[9:0]</obj_property>
       <obj_property name="ObjectShortName">o_addr_0[9:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEM_CONTROLLER/o_data_to_mem_0" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">o_data_to_mem_0[9:0]</obj_property>
       <obj_property name="ObjectShortName">o_data_to_mem_0[9:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEM_CONTROLLER/o_we_0" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">o_we_0[0:0]</obj_property>
       <obj_property name="ObjectShortName">o_we_0[0:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEM_CONTROLLER/o_mem_enable" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">o_mem_enable</obj_property>
       <obj_property name="ObjectShortName">o_mem_enable</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEMORY/dina" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">dina[9:0]</obj_property>
       <obj_property name="ObjectShortName">dina[9:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEMORY/douta" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">douta[9:0]</obj_property>
       <obj_property name="ObjectShortName">douta[9:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEMORY/doutb" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">doutb[9:0]</obj_property>
       <obj_property name="ObjectShortName">doutb[9:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
    </wvobject>
    <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEM_CONTROLLER/addr_0" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">addr_0[9:0]</obj_property>
       <obj_property name="ObjectShortName">addr_0[9:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/top_sim/TOP_ENT/ADC_MEM_CONTROLLER/i_read" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">i_read</obj_property>
+      <obj_property name="ObjectShortName">i_read</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
    </wvobject>
 </wave_config>

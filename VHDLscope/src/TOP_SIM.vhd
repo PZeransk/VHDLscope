@@ -15,21 +15,16 @@
 -- Revision: 
 -- Revision 0.01 - File Created
 -- Additional Comments: 
---
+
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+--! Test bench for TOP entity. It is for simulating STM32MP157 board sending
+--! commands to fpga board.
 
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
+--! \param C_data_length sets resosultion of used ADC
 entity TOP_SIM is
     generic (
         C_data_length : integer := 12

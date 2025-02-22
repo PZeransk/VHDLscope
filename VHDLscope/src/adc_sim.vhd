@@ -3,6 +3,15 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.numeric_std.all;
 
+--! Entity for simulating ADC acquiring sine wave with set resolution.
+--! You can set output "voltage" by dividing it by the value of choice.
+--! It has 3-Wire SPI interface.
+
+--! \param C_data_length Sets the length of data transmitted via SPI
+--! \param C_divider Sets the max binary value of the signal
+--! \param i_clk    Input clock
+--! \param i_cs     Input chip select
+--! \param o_miso0  Data output
 
 entity adc_sim is
 Generic(C_data_length	:	integer := 12;

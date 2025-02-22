@@ -1,33 +1,20 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    14:23:25 09/17/2024 
--- Design Name: 
--- Module Name:    dac_sim - Behavioral 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: Simulated MCP4726
---
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
-----------------------------------------------------------------------------------
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+--! Entity for simulating 12-bit DAC with I2C interfave.
+--! For any information regarding register addresses see datasheet.
 
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+--! \param  C_write_vol_size 	 Command size for volitate DAC register write
+--! \param  C_write_vol_reg_size Command size for writing to volitale memory
+--! \param  C_write_vol_conf 	 Command size for writing volitale configuration bits
+--! \param  C_write_all_meme 	 Command size for writing to all memory
+--! \param  C_addr_len 			 I2C address length
+--! \param  C_data_len 			 I2C data length
+--! \param  io_sda 				 Data port of I2C
+--! \param  i_scl  	  			 Clock port of I2C
+--! \param  i_dev_addr 			 Port for setting custom device address, should be in generics section
+
 
 entity dac_sim is
 	generic (
@@ -38,9 +25,9 @@ entity dac_sim is
 		C_addr_len 				: integer := 7;
 		C_data_len 				: integer := 8
 	);
-    Port ( io_sda : inout  std_logic;
-           i_scl  : in     std_logic;
-           i_dev_addr : in std_logic_vector(C_addr_len - 1 downto 0)
+    Port ( io_sda 		: inout  std_logic;
+           i_scl  	  	: in     std_logic;
+           i_dev_addr 	: in std_logic_vector(C_addr_len - 1 downto 0)
            );
 end dac_sim;
 

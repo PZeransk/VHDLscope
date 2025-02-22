@@ -297,7 +297,7 @@ OPTIMIZE_FOR_FORTRAN   = NO
 # sources. Doxygen will then generate output that is tailored for VHDL.
 # The default value is: NO.
 
-OPTIMIZE_OUTPUT_VHDL   = NO
+OPTIMIZE_OUTPUT_VHDL   = YES
 
 # Set the OPTIMIZE_OUTPUT_SLICE tag to YES if your project consists of Slice
 # sources only. Doxygen will then generate output that is more tailored for that

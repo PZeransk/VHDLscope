@@ -20,14 +20,23 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+--! Entity used for simulating STM32MP157 board. It sends commands to the
+--! FPGA (TOP entity).
 
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+--! \param C_delay sets for how long before and after the data transmission 
+--! cs state will be set
+--! \param C_clk_div internal clock divider
+--! \param C_cmd_size size of the command
+--! \param C_data_size size of data which will be following command in transmission
+--!
+--! \param o_mosi data output
+--! \param o_cs   chip select port
+--! \param o_spi_clk spi clock of the board
+--! \param i_cmd_sel port for selecting command to be send to FPGA
+--! \param i_miso   data input
+--! \param i_clk    input clock
+--! \param i_trigger triggers command and data transfer when set low
+--! \param i_reset_n reset port, active low
 
 entity master_board_spi is
     generic (

@@ -8,7 +8,7 @@ Everything will be controlled with Linux kernel driver
 * [Description](#description)
 * [Used hardware](#hardware)
 * [Project log](#project-log)
-
+* [Documentation](#documentation)
 ## Description
 
 
@@ -45,3 +45,10 @@ on this [image](#image-1.-data-sent-from-stm32mp157-mpu.).
 ##### Image 2. Command and 4 CS activations seqence.
 
 As for now i do not have board with ADCs and DACs, so full hardware tests must wait.
+
+## Documentation
+
+Documentation is based on doxygen. It is not currently deployed, but you can create it by running command below in the root directory of repo.
+```bash
+doxygen Doxyfile 
+```

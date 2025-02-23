@@ -1,25 +1,18 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    14:47:53 09/09/2024 
--- Design Name: 
--- Module Name:    spi_master - Behavioral 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
---
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
-----------------------------------------------------------------------------------
+
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
+
+--! SPI master. Used to connect to external ADC's.
+
+--! \param C_i_clk_freq    Input clock freqency
+--! \param C_max_spi_freq  Maximum SPI clock frequency
+--! \param C_clk_ratio     Set clock ratio for input clock division
+--! \param C_data_length   Data lenght of SPI transfer
+--! \param C_adc_data_len  ADC resolution
+--! \param C_cmd_size      Size of command
+--! \param C_data_size     Size of data following command
 
 
 entity spi_master is
@@ -33,25 +26,25 @@ GENERIC(
   C_data_size     : integer := 16
 	);
 PORT(
-	i_clk			    :	in 	std_logic;
-	i_reset_n		  :	in 	std_logic;
-	i_enable		  :	in 	std_logic;
-  i_params      : in  std_logic_vector(C_data_size - 1 downto 0);
+	i_clk			    :	in 	std_logic; --! Input master clock
+	i_reset_n		  :	in 	std_logic;--! Reset active low
+	i_enable		  :	in 	std_logic;--! Enables SPI transfer
+  i_params      : in  std_logic_vector(C_data_size - 1 downto 0); --! SPI parameters, sets sampling rate and number of samples to take
 --	i_clk_polarity	:	in  std_logic;
 --	i_clk_phase		:	in 	std_logic;
-  i_mem_ok      : in  std_logic;
-	i_miso_0		  :	in 	std_logic;
-	i_miso_1		  :	in 	std_logic;
+  i_mem_ok      : in  std_logic; --! Memory flag for memory handshake
+	i_miso_0		  :	in 	std_logic; --! Data from ADC 0
+	i_miso_1		  :	in 	std_logic;--! Data from ADC 1
 	--i_address		:	in 	std_logic_vector(C_data_length downto 0);
-  o_busy        : out std_logic;
-	o_cs			    :	out std_logic;
-	o_spi_clk		  :	out std_logic;
-	o_mosi_0		  :	out	std_logic;
-	o_rx_data_0		:	out std_logic_vector(C_adc_data_len- 1 downto 0);
-	o_rx_data_1		:	out std_logic_vector(C_adc_data_len - 1 downto 0);
-  o_data_ok     : out std_logic;
+  o_busy        : out std_logic; --! Busy flag signaling if SPI master is busy
+	o_cs			    :	out std_logic; --! Output CS
+	o_spi_clk		  :	out std_logic; --! SPI clock
+	o_mosi_0		  :	out	std_logic; --! SPI master output
+	o_rx_data_0		:	out std_logic_vector(C_adc_data_len- 1 downto 0); --! Data received from ADC 0
+	o_rx_data_1		:	out std_logic_vector(C_adc_data_len - 1 downto 0); --! Data received from ADC 1
+  o_data_ok     : out std_logic; --! DATA OK flag for memory handshake
   --debug leds output, should display received command
-  o_led_dbg     : out std_logic_vector(C_cmd_size - 1 downto 0)
+  o_led_dbg     : out std_logic_vector(C_cmd_size - 1 downto 0) --! Debug LED output
 	);
 end spi_master;
 

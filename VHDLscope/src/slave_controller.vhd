@@ -1,22 +1,4 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    10:54:55 11/25/2024 
--- Design Name: 
--- Module Name:    slave_controller - Behavioral 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
---
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
-----------------------------------------------------------------------------------
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -24,10 +6,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- arithmetic functions with Signed or Unsigned values
 use IEEE.NUMERIC_STD.ALL;
 
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+--! SPI slave controller. Used to connect spi_slave to rest of the design.
+--! It decides what action to take according to received command.
+
+--! \param C_data_length	Length of data in one SPI block
+--! \param C_cmd_size   	Size of command
+--! \param C_data_size  	Size of data following command
 
 entity slave_controller is
 GENERIC(
@@ -36,23 +20,23 @@ GENERIC(
   	C_data_size  	: 	integer := 16
 	);
 PORT(
-	i_clk			:	in 	std_logic;
-	i_reset_n		:	in 	std_logic; -- active low
-	i_rx_data 		:	in  std_logic_vector(C_data_length - 1 downto 0);
-	i_rx_data_ready :	in 	std_logic; -- cs from master
-	i_data_cnt_reset: 	in  std_logic;
+	i_clk			:	in 	std_logic;  --! Input clock
+	i_reset_n		:	in 	std_logic;  --! Reset Active low
+	i_rx_data 		:	in  std_logic_vector(C_data_length - 1 downto 0); --! Data received from master
+	i_rx_data_ready :	in 	std_logic; --! High if data from master was received by FPGA
+	i_data_cnt_reset: 	in  std_logic; --! Resets counter
 
-	i_finish		: 	in std_logic;
+	i_finish		: 	in std_logic; --! Finish flag
 	
-	i_master_busy 	: 	in std_logic;
+	i_master_busy 	: 	in std_logic; --! Busy flag
 
 	--o_data_ok 		:   out std_logic;
-	o_en_gen  		:	out std_logic;
-	o_data_gen 		: 	out std_logic_vector(2*C_data_length - 1 downto 0);
-	o_en_trigger	:	out std_logic;
-	o_en_read 		: 	out std_logic;
-	o_cmd 			: 	out std_logic_vector(C_cmd_size - 1 downto 0);
-	o_data_trig		:	out std_logic_vector(2*C_data_length - 1 downto 0)-- data received from master
+	o_en_gen  		:	out std_logic; --! Enables function generator
+	o_data_gen 		: 	out std_logic_vector(2*C_data_length - 1 downto 0); --! Data to function generator
+	o_en_trigger	:	out std_logic; --! Triggers ADC measurment
+	o_en_read 		: 	out std_logic; --! Enables read from memory
+	o_cmd 			: 	out std_logic_vector(C_cmd_size - 1 downto 0); --! Output command
+	o_data_trig		:	out std_logic_vector(2*C_data_length - 1 downto 0)--! Data received from master
 	);
 end slave_controller;
 

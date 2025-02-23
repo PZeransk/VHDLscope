@@ -1,9 +1,23 @@
 
 
+ 
+--! Use standard library
 library IEEE;
+--! Use logic elements
 use IEEE.STD_LOGIC_1164.ALL;
+--! Use numerics
 use IEEE.numeric_std.all;
 
+--! This is TOP entity of the design.
+
+--! \param C_data_i2c_length Length of I2C data
+--! \param C_addr_length	 Length of I2C address
+--! \param C_clk_speed 		 Master clock speed, in my case it is
+--! a oscillator clock speed
+--! \param C_i2c_scl_speed 	 I2C clock speed, used to calculate clock division
+--! \param C_clk_ratio 		 Clock divider for SPI master entity
+--! \param C_adc_data_len  	 Length of data coming from ADC, should comparable to ADC resolution
+--! \param C_data_length	 Length of SPI data transfer
 entity TOP is
     GENERIC(
     	C_data_i2c_length	: 	integer := 8;

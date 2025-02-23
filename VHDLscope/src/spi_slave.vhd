@@ -1,33 +1,18 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    16:51:09 10/12/2024 
--- Design Name: 
--- Module Name:    spi_slave - Behavioral 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
---
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
-----------------------------------------------------------------------------------
+--! Use standard library
 library IEEE;
+--! Use logic elements
 use IEEE.STD_LOGIC_1164.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+--! SPI slave entity. It
+--! connects with STM32MP157 board and receives commands from it.
+--! After receiving data is transfered to slave_controller entity for 
+--! further operations.
 
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+--! \param C_data_length	Length of data in one SPI block
+--! \param C_cmd_size   	Size of command
+--! \param C_data_size  	Size of data following command
+
+
 
 entity spi_slave is
 GENERIC(
@@ -36,17 +21,16 @@ GENERIC(
   	C_data_size  	: 	integer := 16
 	);
 PORT(
-	i_clk			:	in 	std_logic;
-	i_reset_n		:	in 	std_logic; -- active low
-	i_cs 			:	in 	std_logic; -- cs from master
- 	i_spi_clk   	: 	in  std_logic; -- clock from master
-	i_mosi			:	in 	std_logic; -- data from master	
-	i_data_tx		: 	in 	std_logic_vector(C_data_length - 1 downto 0); -- data to send to master
-	
-	o_finish_flag	:   out std_logic;
-	o_data			:	out std_logic_vector(C_data_length - 1 downto 0);-- data received from master
-	o_miso			: 	out std_logic;
-	o_data_rx_ready	: 	out std_logic -- rx data flag '1' when data was fully received
+	i_clk			:	in 	std_logic; --! Input clock
+	i_reset_n		:	in 	std_logic; --! Reset Active low
+	i_cs 			:	in 	std_logic; --! CS from master
+ 	i_spi_clk   	: 	in  std_logic; --! SPI clock from master
+	i_mosi			:	in 	std_logic; --! Data from master	
+	i_data_tx		: 	in 	std_logic_vector(C_data_length - 1 downto 0); --! Data to be send to master
+	o_finish_flag	:   out std_logic; --! Flag for signaling end of master transmission
+	o_data			:	out std_logic_vector(C_data_length - 1 downto 0);--! Data received from master
+	o_miso			: 	out std_logic;--! Data to master
+	o_data_rx_ready	: 	out std_logic --! rx data flag '1' when data was fully received
 
 	);
 

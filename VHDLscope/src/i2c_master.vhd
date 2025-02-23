@@ -21,14 +21,12 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+--! I2C master. Used to interface I2C DAC.
 
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+--! \param C_data_length	I2C data length
+--! \param C_addr_length	I2C address length
+--! \param C_clk_speed 		Master clock speed
+--! \param C_i2c_scl_speed 	Desired I2C clock speed
 
 entity i2c_master is
 	generic (
